@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smart Bus Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+  <header>
+    <h1>🚌 Smart Public Transport Tracker</h1>
+  </header>
+
+  <div id="controls">
+    <label for="routeSelect">Select Bus Route:</label>
+    <select id="routeSelect">
+      <option value="bus1">Bus 101</option>
+      <option value="bus2">Bus 202</option>
+    </select>
+    <div id="etaBox">ETA: -- mins</div>
+    <div id="alertBox"></div>
+  </div>
+
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #0d0d0d;
+  color: white;
+}
+
+header {
+  background: #1a1a2e;
+  padding: 15px;
+  text-align: center;
+  border-bottom: 2px solid gold;
+}
+
+#controls {
+  padding: 10px 15px;
+  background: #16213e;
+}
+
+select {
+  padding: 6px;
+  margin-left: 8px;
+}
+
+#etaBox {
+  margin-top: 8px;
+  font-size: 18px;
+  color: #00e5ff;
+}
+
+#alertBox {
+  margin-top: 5px;
+  color: orange;
+  font-weight: bold;
+}
+
+#map {
+  height: 500px;
+  width: 100%;
+}

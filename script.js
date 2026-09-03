@@ -1,65 +1,182 @@
-const map = L.map('map').setView([12.9716, 77.5946], 13);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© OpenStreetMap contributors'
-}).addTo(map);
-
-const routes = {
-  bus1: [
-    [12.9716, 77.5946],
-    [12.9750, 77.6000],
-    [12.9800, 77.6050],
-    [12.9850, 77.6100]
-  ],
-  bus2: [
-    [12.9600, 77.5900],
-    [12.9650, 77.5950],
-    [12.9700, 77.6000],
-    [12.9750, 77.6050]
-  ]
-};
-
-const busIcon = L.divIcon({ html: "🚌", className: "bus-icon", iconSize: [30, 30] });
-
-let markers = {
-  bus1: L.marker(routes.bus1[0], { icon: busIcon }).addTo(map),
-  bus2: L.marker(routes.bus2[0], { icon: busIcon }).addTo(map)
-};
-
-let positions = { bus1: 0, bus2: 0 };
-let delayed = { bus1: false, bus2: false };
-
-setInterval(() => {
-  for (let bus in routes) {
-    if (Math.random() < 0.1) {
-      delayed[bus] = true;
-    }
-
-    if (!delayed[bus]) {
-      positions[bus] = (positions[bus] + 1) % routes[bus].length;
-      markers[bus].setLatLng(routes[bus][positions[bus]]);
-    } else {
-      if (Math.random() < 0.3) delayed[bus] = false;
-    }
+const routes = [
+  {
+    id: "101",
+    badge: "101",
+    name: "Chittoor → Vellore",
+    sub: "Vellore-bound · Favorite",
+    favorite: true,
+    direction: "Vell.",
+    stops: [
+      { name: "Chittoor Bus Stand", distance: "0.2 mi away", status: "next", eta: 3 },
+      { name: "Palamaner", distance: "0.6 mi away", status: "following", eta: 9 },
+      { name: "Gudiyatham", distance: "1.1 mi away", status: "following", eta: 15 },
+      { name: "Katpadi", distance: "1.7 mi away", status: "following", eta: 21 }
+    ],
+    connectionStop: "Palamaner",
+    connectionTime: "08:50"
+  },
+  {
+    id: "202",
+    badge: "202",
+    name: "Crosstown",
+    sub: "Eastbound",
+    favorite: false,
+    direction: "East",
+    stops: [
+      { name: "Market & 2nd", distance: "0.3 mi away", status: "next", eta: 5 },
+      { name: "4th Street", distance: "0.9 mi away", status: "following", eta: 12 },
+      { name: "Fairview", distance: "1.4 mi away", status: "following", eta: 18 },
+      { name: "Harbor Loop", distance: "2.0 mi away", status: "following", eta: 24 }
+    ],
+    connectionStop: "Fairview",
+    connectionTime: "09:05"
+  },
+  {
+    id: "303",
+    badge: "303",
+    name: "Airport Connector",
+    sub: "Southbound",
+    favorite: false,
+    direction: "South",
+    stops: [
+      { name: "Terminal A", distance: "0.4 mi away", status: "next", eta: 4 },
+      { name: "Cargo Gate", distance: "1.0 mi away", status: "following", eta: 11 },
+      { name: "Rental Row", distance: "1.6 mi away", status: "following", eta: 17 },
+      { name: "Downtown Hub", distance: "2.3 mi away", status: "following", eta: 26 }
+    ],
+    connectionStop: "Rental Row",
+    connectionTime: "09:20"
+  },
+  {
+    id: "404",
+    badge: "404",
+    name: "Riverside Express",
+    sub: "Westbound",
+    favorite: false,
+    direction: "West",
+    stops: [
+      { name: "Riverside Park", distance: "0.2 mi away", status: "next", eta: 2 },
+      { name: "Mill Street", distance: "0.8 mi away", status: "following", eta: 8 },
+      { name: "Old Bridge", distance: "1.3 mi away", status: "following", eta: 14 },
+      { name: "Westgate", distance: "1.9 mi away", status: "following", eta: 20 }
+    ],
+    connectionStop: "Old Bridge",
+    connectionTime: "08:40"
+  },
+  {
+    id: "505",
+    badge: "505",
+    name: "University Line",
+    sub: "Eastbound",
+    favorite: false,
+    direction: "East",
+    stops: [
+      { name: "Main Quad", distance: "0.1 mi away", status: "next", eta: 6 },
+      { name: "Library Circle", distance: "0.5 mi away", status: "following", eta: 13 },
+      { name: "Stadium Gate", distance: "1.2 mi away", status: "following", eta: 19 },
+      { name: "East Housing", distance: "1.8 mi away", status: "following", eta: 25 }
+    ],
+    connectionStop: "Library Circle",
+    connectionTime: "09:00"
   }
-  updateSelectedBusInfo();
-}, 2000);
+];
 
-function updateSelectedBusInfo() {
-  const selected = document.getElementById('routeSelect').value;
-  const etaBox = document.getElementById('etaBox');
-  const alertBox = document.getElementById('alertBox');
+let activeRouteId = "101";
 
-  const remainingStops = routes[selected].length - positions[selected];
-  const estimatedMins = remainingStops * 2;
-
-  etaBox.textContent = `ETA: ${estimatedMins} mins`;
-
-  if (delayed[selected]) {
-    alertBox.textContent = `⚠️ ${selected.toUpperCase()} is currently delayed`;
-  } else {
-    alertBox.textContent = '';
-  }
+function formatTime(date){
+  return date.toTimeString().slice(0,8);
 }
 
-document.getElementById('routeSelect').addEventListener('change', updateSelectedBusInfo);
+function renderRouteCards(){
+  const el = document.getElementById("routes");
+  el.innerHTML = routes.map(r => `
+    <button class="route-card ${r.id === activeRouteId ? "active" : ""}" data-id="${r.id}">
+      <span class="route-badge">${r.badge}</span>
+      <p class="route-name">${r.name}</p>
+      <p class="route-sub">${r.sub}</p>
+    </button>
+  `).join("");
+
+  el.querySelectorAll(".route-card").forEach(card => {
+    card.addEventListener("click", () => {
+      activeRouteId = card.dataset.id;
+      renderRouteCards();
+      renderSnapshot();
+      renderStops();
+    });
+  });
+}
+
+function currentRoute(){
+  return routes.find(r => r.id === activeRouteId);
+}
+
+function renderSnapshot(){
+  const r = currentRoute();
+  const nextStop = r.stops[0];
+
+  document.getElementById("snapRoute").textContent = `Bus ${r.id}`;
+  document.getElementById("snapPath").textContent = `${r.name} · ${r.sub.split(" · ")[0]}`;
+  document.getElementById("etaMinutes").textContent = nextStop.eta;
+  document.getElementById("nextStop").textContent = nextStop.name;
+  document.getElementById("statStops").textContent = `${r.stops.length} total`;
+  document.getElementById("statDirection").textContent = r.direction;
+  document.getElementById("lastUpdated").textContent = formatTime(new Date());
+
+  document.getElementById("mapBusName").textContent = `Bus ${r.id} is moving`;
+  document.getElementById("connectionStop").textContent = r.connectionStop;
+  document.getElementById("connectionTime").textContent = r.connectionTime;
+
+  const favBtn = document.getElementById("favBtn");
+  favBtn.classList.toggle("is-fav", !!r.favorite);
+
+  document.getElementById("liveAsOf").textContent = `Live as of ${formatTime(new Date()).slice(0,5)}`;
+}
+
+function renderStops(){
+  const r = currentRoute();
+  const list = document.getElementById("stopList");
+  list.innerHTML = r.stops.map(s => `
+    <li class="stop-item">
+      <span class="stop-status ${s.status}"></span>
+      <div class="stop-info">
+        <p class="stop-name">${s.name}</p>
+        <p class="stop-meta">${s.distance} · ${s.status === "next" ? "Next stop" : "Following"}</p>
+      </div>
+      <div class="stop-eta">
+        <p class="stop-time">${s.eta} min</p>
+        <p class="stop-arrival">arrival</p>
+      </div>
+    </li>
+  `).join("");
+}
+
+function updateDate(){
+  const el = document.getElementById("today");
+  const opts = { weekday: "long", month: "long", day: "numeric" };
+  el.textContent = new Date().toLocaleDateString("en-US", opts).toUpperCase();
+}
+
+function simulateProgress(){
+  const progress = Math.floor(15 + Math.random() * 20);
+  document.getElementById("mapProgress").textContent = `${progress}% along route`;
+}
+
+document.getElementById("refreshBtn").addEventListener("click", () => {
+  renderSnapshot();
+  simulateProgress();
+});
+
+document.getElementById("favBtn").addEventListener("click", () => {
+  const r = currentRoute();
+  r.favorite = !r.favorite;
+  renderRouteCards();
+  renderSnapshot();
+});
+
+updateDate();
+renderRouteCards();
+renderSnapshot();
+renderStops();
+simulateProgress();

@@ -1,29 +1,140 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Smart Bus Tracker</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wayline — Bus Tracker</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <header>
-    <h1>🚌 Smart Public Transport Tracker</h1>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🚌</span>
+      <span class="brand-name">Wayline</span>
+    </div>
+    <div class="status-row">
+      <span class="status-date" id="today"></span>
+      <span class="status-live"><span class="pulse-dot"></span> All systems live</span>
+    </div>
   </header>
 
-  <div id="controls">
-    <label for="routeSelect">Select Bus Route:</label>
-    <select id="routeSelect">
-      <option value="bus1">Bus 101</option>
-      <option value="bus2">Bus 202</option>
-    </select>
-    <div id="etaBox">ETA: -- mins</div>
-    <div id="alertBox"></div>
-  </div>
+  <section class="hero">
+    <p class="hero-eyebrow">Your commute, in view</p>
+    <h1 class="hero-title">Make your<br>connection.</h1>
+    <p class="hero-sub">A quiet little control room for the trip ahead. See the bus, check the stops, and leave with confidence.</p>
+  </section>
 
-  <div id="map"></div>
+  <section class="routes" id="routes">
+    <!-- route cards injected by script.js -->
+  </section>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <section class="panel snapshot-panel">
+    <div class="panel-head">
+      <span class="panel-label"><span class="dot dot-green"></span> Live snapshot</span>
+      <div class="panel-actions">
+        <button class="icon-btn fav-btn" id="favBtn" aria-label="Favorite this route">★</button>
+        <button class="icon-btn refresh-btn" id="refreshBtn">↻ Refresh</button>
+      </div>
+    </div>
+
+    <div class="snapshot-body">
+      <h2 class="snapshot-title" id="snapRoute">Bus 101</h2>
+      <p class="snapshot-sub" id="snapPath">Chittoor → Vellore · Vellore-bound</p>
+
+      <div class="snapshot-main">
+        <div class="eta-block">
+          <span class="eta-number" id="etaMinutes">3</span><span class="eta-unit">min</span>
+          <p class="eta-caption">until your next bus</p>
+        </div>
+        <div class="next-stop-block">
+          <p class="next-stop-label">Next stop</p>
+          <p class="next-stop-name" id="nextStop">Chittoor Bus Stand</p>
+        </div>
+      </div>
+
+      <div class="snapshot-stats">
+        <div class="stat">
+          <p class="stat-label">Service</p>
+          <p class="stat-value stat-good" id="statService">On time</p>
+        </div>
+        <div class="stat">
+          <p class="stat-label">Stops</p>
+          <p class="stat-value" id="statStops">5 total</p>
+        </div>
+        <div class="stat">
+          <p class="stat-label">Direction</p>
+          <p class="stat-value" id="statDirection">Vell.</p>
+        </div>
+      </div>
+
+      <p class="last-updated">Last updated today at <span id="lastUpdated">--:--:--</span></p>
+    </div>
+  </section>
+
+  <section class="panel map-panel">
+    <svg viewBox="0 0 320 220" class="route-map" id="routeMap">
+      <path d="M20,190 C70,170 90,130 140,110 C180,95 190,60 260,30" stroke="#F0B429" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.35"/>
+      <path d="M20,190 C70,170 90,130 140,110 C180,95 190,60 260,30" stroke="#E8735C" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <circle cx="90" cy="150" r="7" fill="#1F3A3D"/>
+      <circle cx="140" cy="110" r="7" fill="#1F3A3D"/>
+      <circle cx="205" cy="70" r="7" fill="#1F3A3D"/>
+      <circle cx="20" cy="190" r="12" fill="#1F3A3D" stroke="#F0B429" stroke-width="4"/>
+      <text x="230" y="25" class="map-label">VELLORE</text>
+      <text x="15" y="205" class="map-label">CHITTOOR</text>
+    </svg>
+    <div class="map-callout">
+      <span class="bus-chip" id="mapBusName">Bus 101 is moving</span>
+      <span class="map-progress" id="mapProgress">20% along route</span>
+    </div>
+  </section>
+
+  <section class="panel connection-panel">
+    <div class="connection-icon">🕐</div>
+    <div class="connection-text">
+      <p class="connection-title">Connection check</p>
+      <p class="connection-sub">You have room to transfer</p>
+      <p class="connection-detail">Arrive at <strong id="connectionStop">Palamaner</strong> by <strong id="connectionTime">08:50</strong></p>
+    </div>
+    <span class="connection-arrow">↗</span>
+  </section>
+
+  <section class="panel alerts-panel">
+    <div class="panel-head">
+      <h2 class="panel-title">Service alerts</h2>
+      <span class="bell">🔔</span>
+    </div>
+    <p class="panel-sub">Anything that could change your trip</p>
+
+    <div class="alert alert-amber">
+      <p class="alert-title">Stop moved temporarily</p>
+      <p class="alert-body">Market & 2nd is boarding one block east through Friday evening.</p>
+      <p class="alert-meta">Updated 18 min ago</p>
+    </div>
+
+    <div class="alert alert-red">
+      <p class="alert-title">Crosstown detour</p>
+      <p class="alert-body">Route 202 skips 4th Street between 9:00 and 11:30 due to road work.</p>
+      <p class="alert-meta">Updated 31 min ago</p>
+    </div>
+  </section>
+
+  <section class="panel stops-panel">
+    <div class="panel-head">
+      <h2 class="panel-title">Nearby stops</h2>
+      <span class="pin">📍</span>
+    </div>
+    <p class="panel-sub">Walking distance from your location</p>
+
+    <ul class="stop-list" id="stopList"></ul>
+  </section>
+
+  <footer class="location-footer">
+    <span>📍 Location set to Downtown</span>
+    <span id="liveAsOf">Live as of --:--</span>
+  </footer>
+
   <script src="script.js"></script>
 </body>
 </html>

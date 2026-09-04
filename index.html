@@ -5,136 +5,271 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wayline — Bus Tracker</title>
-<link rel="stylesheet" href="style.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+<div class="app">
+
   <header class="topbar">
     <div class="brand">
-      <span class="brand-mark">🚌</span>
-      <span class="brand-name">Wayline</span>
+      <span class="brand-mark">◍</span>
+      <div class="brand-text">
+        <span class="brand-name">Wayline</span>
+        <span class="brand-sub">Route 101 · Chittoor–Vellore Corridor</span>
+      </div>
     </div>
-    <div class="status-row">
-      <span class="status-date" id="today"></span>
-      <span class="status-live"><span class="pulse-dot"></span> All systems live</span>
-    </div>
+
+    <nav class="role-switch" role="tablist" aria-label="Choose dashboard">
+      <button class="role-btn is-active" data-view="commuter" role="tab" aria-selected="true">Commuter</button>
+      <button class="role-btn" data-view="depot" role="tab" aria-selected="false">Depot Manager</button>
+      <button class="role-btn" data-view="driver" role="tab" aria-selected="false">Driver</button>
+      <button class="role-btn" data-view="system" role="tab" aria-selected="false">IoT &amp; System</button>
+    </nav>
   </header>
 
-  <section class="hero">
-    <p class="hero-eyebrow">Your commute, in view</p>
-    <h1 class="hero-title">Make your<br>connection.</h1>
-    <p class="hero-sub">A quiet little control room for the trip ahead. See the bus, check the stops, and leave with confidence.</p>
-  </section>
+  <main class="stage">
 
-  <section class="routes" id="routes">
-    <!-- route cards injected by script.js -->
-  </section>
+    <!-- ============ COMMUTER VIEW ============ -->
+    <section id="view-commuter" class="view is-active" aria-label="Commuter dashboard">
 
-  <section class="panel snapshot-panel">
-    <div class="panel-head">
-      <span class="panel-label"><span class="dot dot-green"></span> Live snapshot</span>
-      <div class="panel-actions">
-        <button class="icon-btn fav-btn" id="favBtn" aria-label="Favorite this route">★</button>
-        <button class="icon-btn refresh-btn" id="refreshBtn">↻ Refresh</button>
-      </div>
-    </div>
-
-    <div class="snapshot-body">
-      <h2 class="snapshot-title" id="snapRoute">Bus 101</h2>
-      <p class="snapshot-sub" id="snapPath">Chittoor → Vellore · Vellore-bound</p>
-
-      <div class="snapshot-main">
-        <div class="eta-block">
-          <span class="eta-number" id="etaMinutes">3</span><span class="eta-unit">min</span>
-          <p class="eta-caption">until your next bus</p>
-        </div>
-        <div class="next-stop-block">
-          <p class="next-stop-label">Next stop</p>
-          <p class="next-stop-name" id="nextStop">Chittoor Bus Stand</p>
+      <div class="map-pane">
+        <div id="map"></div>
+        <div class="map-readout">
+          <div class="readout-row">
+            <span class="dot dot-live"></span>
+            <span>Bus 101 is moving live along its route</span>
+          </div>
+          <div class="readout-row muted" id="progressLabel">0% along route</div>
         </div>
       </div>
 
-      <div class="snapshot-stats">
-        <div class="stat">
-          <p class="stat-label">Service</p>
-          <p class="stat-value stat-good" id="statService">On time</p>
+      <aside class="side-pane">
+
+        <div class="panel accent-live">
+          <div class="panel-head">
+            <h2>Next arrival</h2>
+            <span class="pill pill-live" id="statusPill">On time</span>
+          </div>
+          <div class="big-stat">
+            <span class="big-num" id="etaMinutes">—</span>
+            <span class="big-unit">min</span>
+          </div>
+          <div class="kv-row">
+            <span>Next stop</span>
+            <strong id="nextStopName">—</strong>
+          </div>
+          <div class="kv-row">
+            <span>Direction</span>
+            <strong id="directionLabel">—</strong>
+          </div>
         </div>
-        <div class="stat">
-          <p class="stat-label">Stops</p>
-          <p class="stat-value" id="statStops">5 total</p>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Onboard crowding</h2>
+            <span class="pill" id="crowdPill">—</span>
+          </div>
+          <div class="crowd-bar">
+            <div class="crowd-fill" id="crowdFill"></div>
+          </div>
+          <p class="fine-print">Estimated from onboard camera + door-sensor counts. Updates every 15s.</p>
         </div>
-        <div class="stat">
-          <p class="stat-label">Direction</p>
-          <p class="stat-value" id="statDirection">Vell.</p>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Connection check</h2>
+          </div>
+          <p class="body-text">You have room to transfer. Arrive at <strong>Palamaner</strong> by <strong>08:50</strong>.</p>
         </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Service alerts</h2>
+          </div>
+          <ul class="alert-list">
+            <li>
+              <strong>Stop moved temporarily</strong>
+              <span>Market &amp; 2nd is boarding one block east through Friday evening.</span>
+              <time>Updated 18 min ago</time>
+            </li>
+            <li>
+              <strong>Crosstown detour</strong>
+              <span>Route 202 skips 4th Street between 9:00 and 11:30 due to road work.</span>
+              <time>Updated 31 min ago</time>
+            </li>
+          </ul>
+        </div>
+
+      </aside>
+    </section>
+
+    <!-- ============ DEPOT MANAGER VIEW ============ -->
+    <section id="view-depot" class="view" aria-label="Depot manager dashboard">
+
+      <div class="depot-grid">
+
+        <div class="panel span-2">
+          <div class="panel-head">
+            <h2>Fleet status</h2>
+            <span class="fine-print" id="fleetTimestamp">—</span>
+          </div>
+          <table class="data-table" id="fleetTable">
+            <thead>
+              <tr>
+                <th>Bus</th>
+                <th>Route</th>
+                <th>Status</th>
+                <th>Current stop</th>
+                <th>Occupancy</th>
+                <th>Driver</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Delay notifications</h2>
+          </div>
+          <ul class="notif-list" id="delayList"></ul>
+        </div>
+
+        <div class="panel span-2">
+          <div class="panel-head">
+            <h2>Driver assignment</h2>
+          </div>
+          <table class="data-table" id="assignTable">
+            <thead>
+              <tr>
+                <th>Driver</th>
+                <th>Assigned bus</th>
+                <th>Route</th>
+                <th>Shift</th>
+                <th>License checked</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
       </div>
+    </section>
 
-      <p class="last-updated">Last updated today at <span id="lastUpdated">--:--:--</span></p>
-    </div>
-  </section>
+    <!-- ============ DRIVER VIEW ============ -->
+    <section id="view-driver" class="view" aria-label="Driver dashboard">
 
-  <section class="panel map-panel">
-    <svg viewBox="0 0 320 220" class="route-map" id="routeMap">
-      <path d="M20,190 C70,170 90,130 140,110 C180,95 190,60 260,30" stroke="#F0B429" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.35"/>
-      <path d="M20,190 C70,170 90,130 140,110 C180,95 190,60 260,30" stroke="#E8735C" stroke-width="5" fill="none" stroke-linecap="round"/>
-      <circle cx="90" cy="150" r="7" fill="#1F3A3D"/>
-      <circle cx="140" cy="110" r="7" fill="#1F3A3D"/>
-      <circle cx="205" cy="70" r="7" fill="#1F3A3D"/>
-      <circle cx="20" cy="190" r="12" fill="#1F3A3D" stroke="#F0B429" stroke-width="4"/>
-      <text x="230" y="25" class="map-label">VELLORE</text>
-      <text x="15" y="205" class="map-label">CHITTOOR</text>
-    </svg>
-    <div class="map-callout">
-      <span class="bus-chip" id="mapBusName">Bus 101 is moving</span>
-      <span class="map-progress" id="mapProgress">20% along route</span>
-    </div>
-  </section>
+      <div class="driver-grid">
 
-  <section class="panel connection-panel">
-    <div class="connection-icon">🕐</div>
-    <div class="connection-text">
-      <p class="connection-title">Connection check</p>
-      <p class="connection-sub">You have room to transfer</p>
-      <p class="connection-detail">Arrive at <strong id="connectionStop">Palamaner</strong> by <strong id="connectionTime">08:50</strong></p>
-    </div>
-    <span class="connection-arrow">↗</span>
-  </section>
+        <div class="panel driver-speed-panel">
+          <span class="panel-label">Current speed</span>
+          <div class="speed-readout">
+            <span class="speed-num" id="driverSpeed">0</span>
+            <span class="speed-unit">km/h</span>
+          </div>
+          <div class="speed-limit">Posted limit: <strong>40 km/h</strong></div>
+        </div>
 
-  <section class="panel alerts-panel">
-    <div class="panel-head">
-      <h2 class="panel-title">Service alerts</h2>
-      <span class="bell">🔔</span>
-    </div>
-    <p class="panel-sub">Anything that could change your trip</p>
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Schedule adherence</h2>
+          </div>
+          <div class="adherence-readout" id="adherenceReadout">On time</div>
+          <p class="fine-print" id="adherenceDetail">Matching timetable within tolerance.</p>
+        </div>
 
-    <div class="alert alert-amber">
-      <p class="alert-title">Stop moved temporarily</p>
-      <p class="alert-body">Market & 2nd is boarding one block east through Friday evening.</p>
-      <p class="alert-meta">Updated 18 min ago</p>
-    </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Next stop</h2>
+          </div>
+          <div class="big-stat">
+            <span class="big-num small" id="driverNextStop">—</span>
+          </div>
+          <div class="kv-row">
+            <span>Distance</span>
+            <strong id="driverDistance">—</strong>
+          </div>
+        </div>
 
-    <div class="alert alert-red">
-      <p class="alert-title">Crosstown detour</p>
-      <p class="alert-body">Route 202 skips 4th Street between 9:00 and 11:30 due to road work.</p>
-      <p class="alert-meta">Updated 31 min ago</p>
-    </div>
-  </section>
+        <div class="panel sos-panel">
+          <div class="panel-head">
+            <h2>Emergency</h2>
+          </div>
+          <button class="sos-button" id="sosButton">SOS</button>
+          <p class="fine-print" id="sosStatus">Press and hold in a real emergency. Alerts depot control instantly.</p>
+        </div>
 
-  <section class="panel stops-panel">
-    <div class="panel-head">
-      <h2 class="panel-title">Nearby stops</h2>
-      <span class="pin">📍</span>
-    </div>
-    <p class="panel-sub">Walking distance from your location</p>
+      </div>
+    </section>
 
-    <ul class="stop-list" id="stopList"></ul>
-  </section>
+    <!-- ============ IOT / SYSTEM VIEW ============ -->
+    <section id="view-system" class="view" aria-label="IoT and system architecture">
 
-  <footer class="location-footer">
-    <span>📍 Location set to Downtown</span>
-    <span id="liveAsOf">Live as of --:--</span>
-  </footer>
+      <div class="system-grid">
 
-  <script src="script.js"></script>
+        <div class="panel span-2">
+          <div class="panel-head">
+            <h2>Hardware integration path</h2>
+            <span class="fine-print">Simulated in this demo — architecture matches real deployment</span>
+          </div>
+
+          <div class="pipeline">
+            <div class="pipe-node">
+              <span class="pipe-icon">▤</span>
+              <strong>OBD-II + GPS unit</strong>
+              <span>Fitted to each bus. Reads speed, engine RPM, fuel, and GNSS position via standard PIDs.</span>
+            </div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-node">
+              <span class="pipe-icon">▩</span>
+              <strong>Telematics gateway</strong>
+              <span>Onboard unit batches readings and pushes them over cellular (4G/LTE) uplink.</span>
+            </div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-node">
+              <span class="pipe-icon">▦</span>
+              <strong>Ingest API</strong>
+              <span>Backend validates, timestamps, and stores each vehicle's telemetry stream.</span>
+            </div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-node">
+              <span class="pipe-icon">▧</span>
+              <strong>Wayline app</strong>
+              <span>Commuter, depot, and driver views subscribe to live positions and status.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Live telemetry feed</h2>
+            <span class="pill pill-live">Simulated</span>
+          </div>
+          <div class="telemetry-feed" id="telemetryFeed" aria-live="polite"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>What's real vs. simulated here</h2>
+          </div>
+          <ul class="checklist">
+            <li><span class="check-yes">✓</span> Route, map, and ETA logic — fully functional</li>
+            <li><span class="check-yes">✓</span> Crowd tag and adherence thresholds — fully functional</li>
+            <li><span class="check-no">◦</span> GPS/OBD-II payloads — simulated, matching real PID format</li>
+            <li><span class="check-no">◦</span> Cellular uplink — simulated locally, same API contract</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

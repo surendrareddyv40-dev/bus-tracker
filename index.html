@@ -4,10 +4,280 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wayline | Smart Bus Fleet Tracker</title>
-  
-  <!-- Leaflet CSS for Maps -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --bg-color: #0d1117;
+      --card-bg: #161b22;
+      --border-color: #30363d;
+      --text-main: #c9d1d9;
+      --text-muted: #8b949e;
+      --accent-blue: #58a6ff;
+      --accent-green: #238636;
+      --accent-red: #da3633;
+      --accent-yellow: #d29922;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .sub-header {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    nav[role="tablist"] {
+      display: flex;
+      gap: 8px;
+      background: #21262d;
+      padding: 4px;
+      border-radius: 8px;
+    }
+
+    .nav-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .nav-tab:hover {
+      color: var(--text-main);
+    }
+
+    .nav-tab.active {
+      background: var(--card-bg);
+      color: var(--accent-blue);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: #ffffff;
+    }
+
+    .text-muted {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .badge-success { background: rgba(35, 134, 54, 0.2); color: #3fb950; }
+    .badge-warning { background: rgba(210, 153, 34, 0.2); color: #d29922; }
+    .badge-danger { background: rgba(218, 54, 51, 0.2); color: #f85149; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.85rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      color: var(--text-muted);
+    }
+
+    .table-container {
+      max-height: 480px;
+      overflow-y: auto;
+    }
+
+    .progress-bar-bg {
+      background: #21262d;
+      height: 12px;
+      border-radius: 6px;
+      margin-top: 20px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      background: var(--accent-blue);
+      width: 35%;
+      height: 100%;
+    }
+
+    .progress-label {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .alert-list {
+      list-style: none;
+      line-height: 1.6;
+      font-size: 0.9rem;
+    }
+
+    .alert-list li {
+      margin-bottom: 10px;
+    }
+
+    .eta-display {
+      font-size: 2.2rem;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .unit {
+      font-size: 1rem;
+    }
+
+    .crowd-bar-bg {
+      background: #21262d;
+      height: 8px;
+      border-radius: 4px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    .crowd-bar-fill {
+      background: var(--accent-yellow);
+      width: 68%;
+      height: 100%;
+    }
+
+    .crowd-subtext {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    .speed-display {
+      font-size: 3rem;
+      font-weight: bold;
+      color: var(--accent-blue);
+    }
+
+    .driver-info {
+      margin-top: 10px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .sos-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    .sos-btn {
+      background-color: var(--accent-red);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .arch-flow {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      overflow-x: auto;
+      padding: 10px 0;
+    }
+
+    .arch-step {
+      background: #21262d;
+      padding: 15px;
+      border-radius: 6px;
+      min-width: 160px;
+      font-size: 0.85rem;
+    }
+
+    #telemetry-log {
+      background-color: #000;
+      color: #00ff66;
+      font-family: monospace;
+      padding: 12px;
+      border-radius: 6px;
+      height: 180px;
+      overflow-y: auto;
+      font-size: 0.8rem;
+    }
+
+    select {
+      background: #21262d;
+      color: #fff;
+      border: 1px solid var(--border-color);
+      padding: 8px;
+      border-radius: 6px;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+  </style>
 </head>
 <body>
 
@@ -29,7 +299,6 @@
   </header>
 
   <main>
-    <!-- 1. COMMUTER DASHBOARD -->
     <section id="tab-commuter" class="tab-content active" aria-label="Commuter dashboard">
       <div class="grid-layout">
         <div>
@@ -39,9 +308,6 @@
 
             <h2 id="active-bus-title">Bus 101 - Chittoor to Vellore</h2>
             <p id="active-bus-desc" class="text-muted">APSRTC Express • Vehicle AP 03 Z 1012</p>
-
-            <!-- Interactive Map Container -->
-            <div id="map"></div>
 
             <div class="progress-bar-bg">
               <div id="route-progress" class="progress-bar-fill"></div>
@@ -92,7 +358,6 @@
       </div>
     </section>
 
-    <!-- 2. DEPOT MANAGER DASHBOARD -->
     <section id="tab-depot" class="tab-content" aria-label="Depot manager dashboard">
       <div class="card">
         <h2>Live Fleet Operations Center (20 Active Buses)</h2>
@@ -134,7 +399,6 @@
       </div>
     </section>
 
-    <!-- 3. DRIVER DASHBOARD -->
     <section id="tab-driver" class="tab-content" aria-label="Driver dashboard">
       <div class="grid-layout">
         <div>
@@ -170,7 +434,6 @@
       </div>
     </section>
 
-    <!-- 4. IOT & ARCHITECTURE DASHBOARD -->
     <section id="tab-iot" class="tab-content" aria-label="IoT and system architecture">
       <div class="card">
         <h2>Hardware Telemetry Architecture</h2>
@@ -204,8 +467,168 @@
     </section>
   </main>
 
-  <!-- Leaflet JS Library -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="app.js"></script>
+  <script>
+    const busFleet = [
+      { id: "Bus 101", route: "Chittoor → Vellore", type: "APSRTC Express", reg: "AP 03 Z 1012", driver: "K. Ramesh", lic: "AP-03-2018092", shift: "06:00 - 14:00", currentStop: "Gudipala Junction", dest: "Vellore New Bus Stand", progress: 35, eta: 4, speed: 42, speedLimit: 50, passengers: 38, capacity: 55, status: "On Time" },
+      { id: "Bus 102", route: "Chittoor → Tirupati", type: "APSRTC Palle Velugu", reg: "AP 03 Z 2041", driver: "S. Venkatesh", lic: "AP-03-2016441", shift: "06:30 - 14:30", currentStop: "Chandragiri Bypass", dest: "Tirupati Central Bus Stand", progress: 60, eta: 11, speed: 48, speedLimit: 50, passengers: 52, capacity: 55, status: "Delayed (+12m)" },
+      { id: "Bus 103", route: "Chittoor → Bengaluru", type: "APSRTC Super Luxury", reg: "AP 03 Z 3311", driver: "M. Nageswara Rao", lic: "AP-03-2015002", shift: "07:00 - 15:00", currentStop: "Palamaner Depot", dest: "Majestic (KSRTC) Bengaluru", progress: 22, eta: 8, speed: 65, speedLimit: 70, passengers: 28, capacity: 45, status: "On Time" },
+      { id: "Bus 104", route: "Chittoor → Chennai", type: "TNSTC Express", reg: "TN 23 N 1892", driver: "R. Selvam", lic: "TN-23-2017882", shift: "05:30 - 13:30", currentStop: "Ranipet Bypass", dest: "CMBT Koyambedu Chennai", progress: 45, eta: 6, speed: 58, speedLimit: 60, passengers: 49, capacity: 50, status: "On Time" },
+      { id: "Bus 105", route: "Tirupati → Vellore", type: "APSRTC Ultra Deluxe", reg: "AP 03 Z 5092", driver: "P. Srinivasa", lic: "AP-03-2019120", shift: "08:00 - 16:00", currentStop: "Panapakam Junction", dest: "Vellore Katpadi Junction", progress: 15, eta: 14, speed: 50, speedLimit: 60, passengers: 40, capacity: 48, status: "Delayed (+8m)" },
+      { id: "Bus 106", route: "Chittoor → Madanapalle", type: "APSRTC Express", reg: "AP 03 Z 6112", driver: "G. Harikrishna", lic: "AP-03-2020411", shift: "06:00 - 14:00", currentStop: "Kallur X Road", dest: "Madanapalle Bus Stand", progress: 70, eta: 5, speed: 44, speedLimit: 50, passengers: 22, capacity: 55, status: "On Time" },
+      { id: "Bus 107", route: "Vellore → Chittoor", type: "TNSTC City Bus", reg: "TN 23 N 2201", driver: "K. Vijay", lic: "TN-23-2019001", shift: "07:00 - 15:00", currentStop: "Katpadi Bus Stop", dest: "Chittoor Old Bus Stand", progress: 80, eta: 3, speed: 38, speedLimit: 40, passengers: 54, capacity: 55, status: "Crowded" },
+      { id: "Bus 108", route: "Tirupati → Bengaluru", type: "FreshBus Electric Express", reg: "AP 03 EV 0042", driver: "D. Siva Kumar", lic: "AP-03-2022019", shift: "09:00 - 17:00", currentStop: "Chittoor Bypass", dest: "Electronic City Bengaluru", progress: 40, eta: 7, speed: 62, speedLimit: 70, passengers: 30, capacity: 42, status: "On Time" },
+      { id: "Bus 109", route: "Chittoor → Palamaner", type: "Local Feeder", reg: "AP 03 Z 7018", driver: "T. Anand", lic: "AP-03-2018223", shift: "06:15 - 14:15", currentStop: "Bangarupalyam", dest: "Palamaner Bus Stand", progress: 55, eta: 6, speed: 40, speedLimit: 50, passengers: 45, capacity: 50, status: "On Time" },
+      { id: "Bus 110", route: "Pileru → Chittoor", type: "APSRTC Palle Velugu", reg: "AP 03 Z 8820", driver: "V. Bhaskar", lic: "AP-03-2017332", shift: "05:45 - 13:45", currentStop: "Damalcheruvu", dest: "Chittoor Main Depot", progress: 65, eta: 9, speed: 45, speedLimit: 50, passengers: 31, capacity: 55, status: "On Time" },
+      { id: "Bus 111", route: "Chittoor → Kuppam", type: "APSRTC Express", reg: "AP 03 Z 9102", driver: "N. Mani", lic: "AP-03-2019881", shift: "07:30 - 15:30", currentStop: "V.Kota Main Junction", dest: "Kuppam Bus Stand", progress: 30, eta: 12, speed: 46, speedLimit: 50, passengers: 36, capacity: 55, status: "On Time" },
+      { id: "Bus 112", route: "Madanapalle → Tirupati", type: "APSRTC Super Luxury", reg: "AP 03 Z 1289", driver: "C. Reddy", lic: "AP-03-2014510", shift: "08:30 - 16:30", currentStop: "Pileru Bypass", dest: "Tirupati RTC Stand", progress: 50, eta: 10, speed: 55, speedLimit: 60, passengers: 44, capacity: 48, status: "Delayed (+15m)" },
+      { id: "Bus 113", route: "Chittoor → Srikalahasti", type: "APSRTC Express", reg: "AP 03 Z 3390", driver: "B. Suresh", lic: "AP-03-2021009", shift: "06:00 - 14:00", currentStop: "Gajulamandyam", dest: "Srikalahasti Temple Stand", progress: 75, eta: 4, speed: 52, speedLimit: 60, passengers: 48, capacity: 55, status: "On Time" },
+      { id: "Bus 114", route: "Tirupati → Chennai", type: "APSRTC Garuda AC", reg: "AP 03 Z 4410", driver: "A. Prasad", lic: "AP-03-2016772", shift: "10:00 - 18:00", currentStop: "Tiruttani Junction", dest: "CMBT Chennai", progress: 50, eta: 15, speed: 60, speedLimit: 70, passengers: 25, capacity: 40, status: "On Time" },
+      { id: "Bus 115", route: "Chittoor → Puttur", type: "APSRTC Local", reg: "AP 03 Z 5581", driver: "K. Mohan", lic: "AP-03-2018991", shift: "06:45 - 14:45", currentStop: "Nagari Bus Stop", dest: "Puttur Bus Stand", progress: 85, eta: 2, speed: 36, speedLimit: 40, passengers: 50, capacity: 55, status: "Crowded" },
+      { id: "Bus 116", route: "Gudiyatham → Chittoor", type: "TNSTC Shuttle", reg: "TN 23 N 9921", driver: "S. Murugan", lic: "TN-23-2020112", shift: "07:15 - 15:15", currentStop: "Paradami Border", dest: "Chittoor RTC Stand", progress: 40, eta: 8, speed: 41, speedLimit: 50, passengers: 29, capacity: 50, status: "On Time" },
+      { id: "Bus 117", route: "Chittoor → Kolar", type: "KSRTC Inter-State", reg: "KA 07 F 1022", driver: "H. Gowda", lic: "KA-07-2017331", shift: "08:00 - 16:00", currentStop: "Mulbagal Bypass", dest: "Kolar Bus Stand", progress: 60, eta: 7, speed: 56, speedLimit: 60, passengers: 33, capacity: 50, status: "On Time" },
+      { id: "Bus 118", route: "Bengaluru → Chittoor", type: "KSRTC Rajahamsa", reg: "KA 07 F 3310", driver: "M. Kumar", lic: "KA-07-2015902", shift: "09:30 - 17:30", currentStop: "Hoskote Toll Gate", dest: "Chittoor Main Depot", progress: 25, eta: 20, speed: 64, speedLimit: 70, passengers: 39, capacity: 44, status: "On Time" },
+      { id: "Bus 119", route: "Tirupati → Kadapa", type: "APSRTC Express", reg: "AP 04 Z 1109", driver: "Y. Ramaiah", lic: "AP-04-2018221", shift: "06:00 - 14:00", currentStop: "Peileru Road", dest: "Kadapa Seven Roads", progress: 35, eta: 18, speed: 54, speedLimit: 60, passengers: 42, capacity: 55, status: "On Time" },
+      { id: "Bus 120", route: "Chittoor → Kanipakam", type: "Temple Special Shuttle", reg: "AP 03 Z 7721", driver: "D. Venkateswarlu", lic: "AP-03-2019441", shift: "05:00 - 13:00", currentStop: "Iruvaram Junction", dest: "Kanipakam Temple Stand", progress: 90, eta: 2, speed: 32, speedLimit: 40, passengers: 55, capacity: 55, status: "Full Capacity" }
+    ];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const commuterSelector = document.getElementById("commuter-bus-selector");
+      const driverSelector = document.getElementById("driver-bus-selector");
+      const fleetTableBody = document.getElementById("fleet-table-body");
+      const driverRosterBody = document.getElementById("driver-roster-body");
+      const sosBtn = document.getElementById("sos-trigger-btn");
+
+      busFleet.forEach((bus, index) => {
+        const opt1 = document.createElement("option");
+        opt1.value = index;
+        opt1.innerText = `${bus.id} - ${bus.route} (${bus.type})`;
+        commuterSelector.appendChild(opt1);
+
+        const opt2 = document.createElement("option");
+        opt2.value = index;
+        opt2.innerText = `${bus.id} - ${bus.route} [Driver: ${bus.driver}]`;
+        driverSelector.appendChild(opt2);
+
+        const occupancyPct = Math.round((bus.passengers / bus.capacity) * 100);
+        let badgeClass = "badge-success";
+        if (occupancyPct > 85) badgeClass = "badge-danger";
+        else if (occupancyPct > 60) badgeClass = "badge-warning";
+
+        const tr1 = document.createElement("tr");
+        tr1.innerHTML = `
+          <td><strong>${bus.id}</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">${bus.reg}</span></td>
+          <td>${bus.route}<br><span style="font-size:0.75rem; color:var(--text-muted);">${bus.type}</span></td>
+          <td><span class="badge ${bus.status.includes('Delayed') ? 'badge-danger' : 'badge-success'}">${bus.status}</span></td>
+          <td>${bus.currentStop}</td>
+          <td><span class="badge ${badgeClass}">${occupancyPct}% (${bus.passengers}/${bus.capacity})</span></td>
+          <td>${bus.speed} km/h</td>
+          <td>${bus.driver}</td>
+        `;
+        fleetTableBody.appendChild(tr1);
+
+        const tr2 = document.createElement("tr");
+        tr2.innerHTML = `
+          <td><strong>${bus.driver}</strong></td>
+          <td><span style="font-family:monospace; color:var(--accent-blue);">${bus.lic}</span></td>
+          <td>${bus.id} (${bus.reg})</td>
+          <td>${bus.route}</td>
+          <td>${bus.shift}</td>
+          <td><span style="color:#3fb950; font-weight:bold;">✓ Verified</span></td>
+        `;
+        driverRosterBody.appendChild(tr2);
+      });
+
+      function updateCommuterView(index) {
+        const bus = busFleet[index];
+        const occPct = Math.round((bus.passengers / bus.capacity) * 100);
+
+        document.getElementById("active-bus-title").innerText = `${bus.id} - ${bus.route}`;
+        document.getElementById("active-bus-desc").innerText = `Operated by ${bus.type} • Vehicle ${bus.reg}`;
+        document.getElementById("route-progress").style.width = bus.progress + "%";
+        document.getElementById("progress-text").innerText = bus.progress;
+
+        document.getElementById("commuter-eta").innerText = bus.eta;
+        document.getElementById("commuter-next-stop").innerText = bus.currentStop;
+        document.getElementById("commuter-direction").innerText = bus.dest;
+        document.getElementById("commuter-occupancy-count").innerText = `${bus.passengers} / ${bus.capacity} passengers`;
+
+        const crowdBar = document.getElementById("commuter-crowd-bar");
+        const crowdBadge = document.getElementById("commuter-crowd-badge");
+        crowdBar.style.width = occPct + "%";
+
+        if (occPct > 85) {
+          crowdBadge.innerText = `High (${occPct}%)`;
+          crowdBadge.className = "badge badge-danger";
+          crowdBar.style.background = "var(--accent-red)";
+        } else if (occPct > 60) {
+          crowdBadge.innerText = `Moderate (${occPct}%)`;
+          crowdBadge.className = "badge badge-warning";
+          crowdBar.style.background = "var(--accent-yellow)";
+        } else {
+          crowdBadge.innerText = `Low (${occPct}%)`;
+          crowdBadge.className = "badge badge-success";
+          crowdBar.style.background = "var(--accent-green)";
+        }
+      }
+
+      function updateDriverView(index) {
+        const bus = busFleet[index];
+        document.getElementById("driver-speed").innerHTML = `${bus.speed} <span class="unit">km/h</span>`;
+        document.getElementById("driver-speed-limit").innerText = `${bus.speedLimit} km/h`;
+        document.getElementById("driver-assigned-name").innerText = bus.driver;
+        document.getElementById("driver-route").innerText = bus.route;
+        document.getElementById("driver-next-stop").innerText = bus.currentStop;
+      }
+
+      commuterSelector.addEventListener("change", (e) => updateCommuterView(e.target.value));
+      driverSelector.addEventListener("change", (e) => updateDriverView(e.target.value));
+
+      updateCommuterView(0);
+      updateDriverView(0);
+
+      const tabs = document.querySelectorAll(".nav-tab");
+      const sections = document.querySelectorAll(".tab-content");
+
+      tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          const targetTab = tab.getAttribute("data-tab");
+          tabs.forEach(t => {
+            t.classList.remove("active");
+            t.setAttribute("aria-selected", "false");
+          });
+          sections.forEach(sec => sec.classList.remove("active"));
+
+          tab.classList.add("active");
+          tab.setAttribute("aria-selected", "true");
+          document.getElementById(`tab-${targetTab}`).classList.add("active");
+        });
+      });
+
+      if (sosBtn) {
+        sosBtn.addEventListener("click", () => {
+          const selectedIndex = driverSelector.value;
+          const bus = busFleet[selectedIndex];
+          alert(`🚨 SOS ALERT SENT!\n\nBus: ${bus.id} (${bus.reg})\nDriver: ${bus.driver}\nRoute: ${bus.route}\n\nHigh-priority GPS coordinates pushed to Depot Control & Dispatch.`);
+        });
+      }
+
+      const telemetryLog = document.getElementById("telemetry-log");
+      setInterval(() => {
+        const randomBus = busFleet[Math.floor(Math.random() * busFleet.length)];
+        randomBus.progress = (randomBus.progress + 1) % 100;
+        randomBus.speed = Math.floor(30 + Math.random() * 30);
+
+        if (telemetryLog) {
+          const timestamp = new Date().toISOString().split('T')[1].slice(0, 8);
+          const lat = (13.2172 + (Math.random() * 0.05)).toFixed(4);
+          const lon = (79.1003 + (Math.random() * 0.05)).toFixed(4);
+
+          const newLog = `[${timestamp}] PUB/MQTT -> ${randomBus.id} (${randomBus.reg}) | SPD:${randomBus.speed}km/h | LAT:${lat} LON:${lon} | PASSENGERS:${randomBus.passengers}/${randomBus.capacity} | QoS:1 ACK\n`;
+          telemetryLog.innerText += newLog;
+          telemetryLog.scrollTop = telemetryLog.scrollHeight;
+        }
+      }, 2000);
+    });
+  </script>
 </body>
 </html>

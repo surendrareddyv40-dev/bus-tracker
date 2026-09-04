@@ -1,31 +1,25 @@
-// COMPLETE 20 BUS FLEET DATASET WITH GPS COORDINATES
 const busFleet = [
-  { id: "Bus 101", route: "Chittoor → Vellore", type: "APSRTC Express", reg: "AP 03 Z 1012", driver: "K. Ramesh", lic: "AP-03-2018092", shift: "06:00 - 14:00", currentStop: "Gudipala Junction", dest: "Vellore New Bus Stand", progress: 35, eta: 4, speed: 42, speedLimit: 50, passengers: 38, capacity: 55, status: "On Time", lat: 13.1167, lon: 79.1000, destLat: 12.9165, destLon: 79.1325 },
-  { id: "Bus 102", route: "Chittoor → Tirupati", type: "APSRTC Palle Velugu", reg: "AP 03 Z 2041", driver: "S. Venkatesh", lic: "AP-03-2016441", shift: "06:30 - 14:30", currentStop: "Chandragiri Bypass", dest: "Tirupati Central Bus Stand", progress: 60, eta: 11, speed: 48, speedLimit: 50, passengers: 52, capacity: 55, status: "Delayed (+12m)", lat: 13.6288, lon: 79.3175, destLat: 13.6288, destLon: 79.4192 },
-  { id: "Bus 103", route: "Chittoor → Bengaluru", type: "APSRTC Super Luxury", reg: "AP 03 Z 3311", driver: "M. Nageswara Rao", lic: "AP-03-2015002", shift: "07:00 - 15:00", currentStop: "Palamaner Depot", dest: "Majestic Bengaluru", progress: 22, eta: 8, speed: 65, speedLimit: 70, passengers: 28, capacity: 45, status: "On Time", lat: 13.2000, lon: 78.7500, destLat: 12.9776, destLon: 77.5714 },
-  { id: "Bus 104", route: "Chittoor → Chennai", type: "TNSTC Express", reg: "TN 23 N 1892", driver: "R. Selvam", lic: "TN-23-2017882", shift: "05:30 - 13:30", currentStop: "Ranipet Bypass", dest: "CMBT Koyambedu Chennai", progress: 45, eta: 6, speed: 58, speedLimit: 60, passengers: 49, capacity: 50, status: "On Time", lat: 12.9288, lon: 79.3333, destLat: 13.0694, destLon: 80.1948 },
-  { id: "Bus 105", route: "Tirupati → Vellore", type: "APSRTC Ultra Deluxe", reg: "AP 03 Z 5092", driver: "P. Srinivasa", lic: "AP-03-2019120", shift: "08:00 - 16:00", currentStop: "Panapakam Junction", dest: "Vellore Katpadi Junction", progress: 15, eta: 14, speed: 50, speedLimit: 60, passengers: 40, capacity: 48, status: "Delayed (+8m)", lat: 13.4000, lon: 79.2000, destLat: 12.9700, destLon: 79.1378 },
-  { id: "Bus 106", route: "Chittoor → Madanapalle", type: "APSRTC Express", reg: "AP 03 Z 6112", driver: "G. Harikrishna", lic: "AP-03-2020411", shift: "06:00 - 14:00", currentStop: "Kallur X Road", dest: "Madanapalle Bus Stand", progress: 70, eta: 5, speed: 44, speedLimit: 50, passengers: 22, capacity: 55, status: "On Time", lat: 13.5500, lon: 78.8000, destLat: 13.5500, destLon: 78.5000 },
-  { id: "Bus 107", route: "Vellore → Chittoor", type: "TNSTC City Bus", reg: "TN 23 N 2201", driver: "K. Vijay", lic: "TN-23-2019001", shift: "07:00 - 15:00", currentStop: "Katpadi Bus Stop", dest: "Chittoor Old Bus Stand", progress: 80, eta: 3, speed: 38, speedLimit: 40, passengers: 54, capacity: 55, status: "Crowded", lat: 12.9700, lon: 79.1378, destLat: 13.2172, destLon: 79.1003 },
-  { id: "Bus 108", route: "Tirupati → Bengaluru", type: "FreshBus Electric Express", reg: "AP 03 EV 0042", driver: "D. Siva Kumar", lic: "AP-03-2022019", shift: "09:00 - 17:00", currentStop: "Chittoor Bypass", dest: "Electronic City Bengaluru", progress: 40, eta: 7, speed: 62, speedLimit: 70, passengers: 30, capacity: 42, status: "On Time", lat: 13.2172, lon: 79.1003, destLat: 12.8452, destLon: 77.6602 },
-  { id: "Bus 109", route: "Chittoor → Palamaner", type: "Local Feeder", reg: "AP 03 Z 7018", driver: "T. Anand", lic: "AP-03-2018223", shift: "06:15 - 14:15", currentStop: "Bangarupalyam", dest: "Palamaner Bus Stand", progress: 55, eta: 6, speed: 40, speedLimit: 50, passengers: 45, capacity: 50, status: "On Time", lat: 13.2100, lon: 78.9000, destLat: 13.2000, destLon: 78.7500 },
-  { id: "Bus 110", route: "Pileru → Chittoor", type: "APSRTC Palle Velugu", reg: "AP 03 Z 8820", driver: "V. Bhaskar", lic: "AP-03-2017332", shift: "05:45 - 13:45", currentStop: "Damalcheruvu", dest: "Chittoor Main Depot", progress: 65, eta: 9, speed: 45, speedLimit: 50, passengers: 31, capacity: 55, status: "On Time", lat: 13.4500, lon: 79.0500, destLat: 13.2172, destLon: 79.1003 },
-  { id: "Bus 111", route: "Chittoor → Kuppam", type: "APSRTC Express", reg: "AP 03 Z 9102", driver: "N. Mani", lic: "AP-03-2019881", shift: "07:30 - 15:30", currentStop: "V.Kota Main Junction", dest: "Kuppam Bus Stand", progress: 30, eta: 12, speed: 46, speedLimit: 50, passengers: 36, capacity: 55, status: "On Time", lat: 12.9800, lon: 78.5800, destLat: 12.7500, destLon: 78.3500 },
-  { id: "Bus 112", route: "Madanapalle → Tirupati", type: "APSRTC Super Luxury", reg: "AP 03 Z 1289", driver: "C. Reddy", lic: "AP-03-2014510", shift: "08:30 - 16:30", currentStop: "Pileru Bypass", dest: "Tirupati RTC Stand", progress: 50, eta: 10, speed: 55, speedLimit: 60, passengers: 44, capacity: 48, status: "Delayed (+15m)", lat: 13.6200, lon: 79.0200, destLat: 13.6288, destLon: 79.4192 },
-  { id: "Bus 113", route: "Chittoor → Srikalahasti", type: "APSRTC Express", reg: "AP 03 Z 3390", driver: "B. Suresh", lic: "AP-03-2021009", shift: "06:00 - 14:00", currentStop: "Gajulamandyam", dest: "Srikalahasti Temple Stand", progress: 75, eta: 4, speed: 52, speedLimit: 60, passengers: 48, capacity: 55, status: "On Time", lat: 13.6500, lon: 79.5200, destLat: 13.7500, destLon: 79.7000 },
-  { id: "Bus 114", route: "Tirupati → Chennai", type: "APSRTC Garuda AC", reg: "AP 03 Z 4410", driver: "A. Prasad", lic: "AP-03-2016772", shift: "10:00 - 18:00", currentStop: "Tiruttani Junction", dest: "CMBT Chennai", progress: 50, eta: 15, speed: 60, speedLimit: 70, passengers: 25, capacity: 40, status: "On Time", lat: 13.1800, lon: 79.6300, destLat: 13.0694, destLon: 80.1948 },
-  { id: "Bus 115", route: "Chittoor → Puttur", type: "APSRTC Local", reg: "AP 03 Z 5581", driver: "K. Mohan", lic: "AP-03-2018991", shift: "06:45 - 14:45", currentStop: "Nagari Bus Stop", dest: "Puttur Bus Stand", progress: 85, eta: 2, speed: 36, speedLimit: 40, passengers: 50, capacity: 55, status: "Crowded", lat: 13.3300, lon: 79.5800, destLat: 13.4400, destLon: 79.5500 },
-  { id: "Bus 116", route: "Gudiyatham → Chittoor", type: "TNSTC Shuttle", reg: "TN 23 N 9921", driver: "S. Murugan", lic: "TN-23-2020112", shift: "07:15 - 15:15", currentStop: "Paradami Border", dest: "Chittoor RTC Stand", progress: 40, eta: 8, speed: 41, speedLimit: 50, passengers: 29, capacity: 50, status: "On Time", lat: 13.0000, lon: 78.9500, destLat: 13.2172, destLon: 79.1003 },
-  { id: "Bus 117", route: "Chittoor → Kolar", type: "KSRTC Inter-State", reg: "KA 07 F 1022", driver: "H. Gowda", lic: "KA-07-2017331", shift: "08:00 - 16:00", currentStop: "Mulbagal Bypass", dest: "Kolar Bus Stand", progress: 60, eta: 7, speed: 56, speedLimit: 60, passengers: 33, capacity: 50, status: "On Time", lat: 13.1600, lon: 78.3900, destLat: 13.1300, destLon: 78.1300 },
-  { id: "Bus 118", route: "Bengaluru → Chittoor", type: "KSRTC Rajahamsa", reg: "KA 07 F 3310", driver: "M. Kumar", lic: "KA-07-2015902", shift: "09:30 - 17:30", currentStop: "Hoskote Toll Gate", dest: "Chittoor Main Depot", progress: 25, eta: 20, speed: 64, speedLimit: 70, passengers: 39, capacity: 44, status: "On Time", lat: 13.0700, lon: 77.8000, destLat: 13.2172, destLon: 79.1003 },
-  { id: "Bus 119", route: "Tirupati → Kadapa", type: "APSRTC Express", reg: "AP 04 Z 1109", driver: "Y. Ramaiah", lic: "AP-04-2018221", shift: "06:00 - 14:00", currentStop: "Peileru Road", dest: "Kadapa Seven Roads", progress: 35, eta: 18, speed: 54, speedLimit: 60, passengers: 42, capacity: 55, status: "On Time", lat: 13.8000, lon: 78.9000, destLat: 14.4700, destLon: 78.8200 },
-  { id: "Bus 120", route: "Chittoor → Kanipakam", type: "Temple Special Shuttle", reg: "AP 03 Z 7721", driver: "D. Venkateswarlu", lic: "AP-03-2019441", shift: "05:00 - 13:00", currentStop: "Iruvaram Junction", dest: "Kanipakam Temple Stand", progress: 90, eta: 2, speed: 32, speedLimit: 40, passengers: 55, capacity: 55, status: "Full Capacity", lat: 13.2500, lon: 79.0800, destLat: 13.2800, destLon: 79.0300 }
+  { id: "Bus 101", route: "Chittoor → Vellore", type: "APSRTC Express", reg: "AP 03 Z 1012", driver: "K. Ramesh", lic: "AP-03-2018092", shift: "06:00 - 14:00", currentStop: "Gudipala Junction", dest: "Vellore New Bus Stand", progress: 35, eta: 4, speed: 42, speedLimit: 50, passengers: 38, capacity: 55, status: "On Time" },
+  { id: "Bus 102", route: "Chittoor → Tirupati", type: "APSRTC Palle Velugu", reg: "AP 03 Z 2041", driver: "S. Venkatesh", lic: "AP-03-2016441", shift: "06:30 - 14:30", currentStop: "Chandragiri Bypass", dest: "Tirupati Central Bus Stand", progress: 60, eta: 11, speed: 48, speedLimit: 50, passengers: 52, capacity: 55, status: "Delayed (+12m)" },
+  { id: "Bus 103", route: "Chittoor → Bengaluru", type: "APSRTC Super Luxury", reg: "AP 03 Z 3311", driver: "M. Nageswara Rao", lic: "AP-03-2015002", shift: "07:00 - 15:00", currentStop: "Palamaner Depot", dest: "Majestic (KSRTC) Bengaluru", progress: 22, eta: 8, speed: 65, speedLimit: 70, passengers: 28, capacity: 45, status: "On Time" },
+  { id: "Bus 104", route: "Chittoor → Chennai", type: "TNSTC Express", reg: "TN 23 N 1892", driver: "R. Selvam", lic: "TN-23-2017882", shift: "05:30 - 13:30", currentStop: "Ranipet Bypass", dest: "CMBT Koyambedu Chennai", progress: 45, eta: 6, speed: 58, speedLimit: 60, passengers: 49, capacity: 50, status: "On Time" },
+  { id: "Bus 105", route: "Tirupati → Vellore", type: "APSRTC Ultra Deluxe", reg: "AP 03 Z 5092", driver: "P. Srinivasa", lic: "AP-03-2019120", shift: "08:00 - 16:00", currentStop: "Panapakam Junction", dest: "Vellore Katpadi Junction", progress: 15, eta: 14, speed: 50, speedLimit: 60, passengers: 40, capacity: 48, status: "Delayed (+8m)" },
+  { id: "Bus 106", route: "Chittoor → Madanapalle", type: "APSRTC Express", reg: "AP 03 Z 6112", driver: "G. Harikrishna", lic: "AP-03-2020411", shift: "06:00 - 14:00", currentStop: "Kallur X Road", dest: "Madanapalle Bus Stand", progress: 70, eta: 5, speed: 44, speedLimit: 50, passengers: 22, capacity: 55, status: "On Time" },
+  { id: "Bus 107", route: "Vellore → Chittoor", type: "TNSTC City Bus", reg: "TN 23 N 2201", driver: "K. Vijay", lic: "TN-23-2019001", shift: "07:00 - 15:00", currentStop: "Katpadi Bus Stop", dest: "Chittoor Old Bus Stand", progress: 80, eta: 3, speed: 38, speedLimit: 40, passengers: 54, capacity: 55, status: "Crowded" },
+  { id: "Bus 108", route: "Tirupati → Bengaluru", type: "FreshBus Electric Express", reg: "AP 03 EV 0042", driver: "D. Siva Kumar", lic: "AP-03-2022019", shift: "09:00 - 17:00", currentStop: "Chittoor Bypass", dest: "Electronic City Bengaluru", progress: 40, eta: 7, speed: 62, speedLimit: 70, passengers: 30, capacity: 42, status: "On Time" },
+  { id: "Bus 109", route: "Chittoor → Palamaner", type: "Local Feeder", reg: "AP 03 Z 7018", driver: "T. Anand", lic: "AP-03-2018223", shift: "06:15 - 14:15", currentStop: "Bangarupalyam", dest: "Palamaner Bus Stand", progress: 55, eta: 6, speed: 40, speedLimit: 50, passengers: 45, capacity: 50, status: "On Time" },
+  { id: "Bus 110", route: "Pileru → Chittoor", type: "APSRTC Palle Velugu", reg: "AP 03 Z 8820", driver: "V. Bhaskar", lic: "AP-03-2017332", shift: "05:45 - 13:45", currentStop: "Damalcheruvu", dest: "Chittoor Main Depot", progress: 65, eta: 9, speed: 45, speedLimit: 50, passengers: 31, capacity: 55, status: "On Time" },
+  { id: "Bus 111", route: "Chittoor → Kuppam", type: "APSRTC Express", reg: "AP 03 Z 9102", driver: "N. Mani", lic: "AP-03-2019881", shift: "07:30 - 15:30", currentStop: "V.Kota Main Junction", dest: "Kuppam Bus Stand", progress: 30, eta: 12, speed: 46, speedLimit: 50, passengers: 36, capacity: 55, status: "On Time" },
+  { id: "Bus 112", route: "Madanapalle → Tirupati", type: "APSRTC Super Luxury", reg: "AP 03 Z 1289", driver: "C. Reddy", lic: "AP-03-2014510", shift: "08:30 - 16:30", currentStop: "Pileru Bypass", dest: "Tirupati RTC Stand", progress: 50, eta: 10, speed: 55, speedLimit: 60, passengers: 44, capacity: 48, status: "Delayed (+15m)" },
+  { id: "Bus 113", route: "Chittoor → Srikalahasti", type: "APSRTC Express", reg: "AP 03 Z 3390", driver: "B. Suresh", lic: "AP-03-2021009", shift: "06:00 - 14:00", currentStop: "Gajulamandyam", dest: "Srikalahasti Temple Stand", progress: 75, eta: 4, speed: 52, speedLimit: 60, passengers: 48, capacity: 55, status: "On Time" },
+  { id: "Bus 114", route: "Tirupati → Chennai", type: "APSRTC Garuda AC", reg: "AP 03 Z 4410", driver: "A. Prasad", lic: "AP-03-2016772", shift: "10:00 - 18:00", currentStop: "Tiruttani Junction", dest: "CMBT Chennai", progress: 50, eta: 15, speed: 60, speedLimit: 70, passengers: 25, capacity: 40, status: "On Time" },
+  { id: "Bus 115", route: "Chittoor → Puttur", type: "APSRTC Local", reg: "AP 03 Z 5581", driver: "K. Mohan", lic: "AP-03-2018991", shift: "06:45 - 14:45", currentStop: "Nagari Bus Stop", dest: "Puttur Bus Stand", progress: 85, eta: 2, speed: 36, speedLimit: 40, passengers: 50, capacity: 55, status: "Crowded" },
+  { id: "Bus 116", route: "Gudiyatham → Chittoor", type: "TNSTC Shuttle", reg: "TN 23 N 9921", driver: "S. Murugan", lic: "TN-23-2020112", shift: "07:15 - 15:15", currentStop: "Paradami Border", dest: "Chittoor RTC Stand", progress: 40, eta: 8, speed: 41, speedLimit: 50, passengers: 29, capacity: 50, status: "On Time" },
+  { id: "Bus 117", route: "Chittoor → Kolar", type: "KSRTC Inter-State", reg: "KA 07 F 1022", driver: "H. Gowda", lic: "KA-07-2017331", shift: "08:00 - 16:00", currentStop: "Mulbagal Bypass", dest: "Kolar Bus Stand", progress: 60, eta: 7, speed: 56, speedLimit: 60, passengers: 33, capacity: 50, status: "On Time" },
+  { id: "Bus 118", route: "Bengaluru → Chittoor", type: "KSRTC Rajahamsa", reg: "KA 07 F 3310", driver: "M. Kumar", lic: "KA-07-2015902", shift: "09:30 - 17:30", currentStop: "Hoskote Toll Gate", dest: "Chittoor Main Depot", progress: 25, eta: 20, speed: 64, speedLimit: 70, passengers: 39, capacity: 44, status: "On Time" },
+  { id: "Bus 119", route: "Tirupati → Kadapa", type: "APSRTC Express", reg: "AP 04 Z 1109", driver: "Y. Ramaiah", lic: "AP-04-2018221", shift: "06:00 - 14:00", currentStop: "Peileru Road", dest: "Kadapa Seven Roads", progress: 35, eta: 18, speed: 54, speedLimit: 60, passengers: 42, capacity: 55, status: "On Time" },
+  { id: "Bus 120", route: "Chittoor → Kanipakam", type: "Temple Special Shuttle", reg: "AP 03 Z 7721", driver: "D. Venkateswarlu", lic: "AP-03-2019441", shift: "05:00 - 13:00", currentStop: "Iruvaram Junction", dest: "Kanipakam Temple Stand", progress: 90, eta: 2, speed: 32, speedLimit: 40, passengers: 55, capacity: 55, status: "Full Capacity" }
 ];
-
-let map;
-let currentBusMarker;
-let destMarker;
-let routePolyline;
 
 document.addEventListener("DOMContentLoaded", () => {
   const commuterSelector = document.getElementById("commuter-bus-selector");
@@ -34,18 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const driverRosterBody = document.getElementById("driver-roster-body");
   const sosBtn = document.getElementById("sos-trigger-btn");
 
-  // 1. Initialize Leaflet Map
-  function initMap() {
-    map = L.map('map').setView([13.2172, 79.1003], 10);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-  }
-
-  initMap();
-
-  // 2. Populate Dropdowns & Depot Tables
   busFleet.forEach((bus, index) => {
     const opt1 = document.createElement("option");
     opt1.value = index;
@@ -86,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
     driverRosterBody.appendChild(tr2);
   });
 
-  // 3. Render Commuter View & Update Map Markers
   function updateCommuterView(index) {
     const bus = busFleet[index];
     const occPct = Math.round((bus.passengers / bus.capacity) * 100);
@@ -118,23 +99,8 @@ document.addEventListener("DOMContentLoaded", () => {
       crowdBadge.className = "badge badge-success";
       crowdBar.style.background = "var(--accent-green)";
     }
-
-    // Update Leaflet Map Positions
-    if (currentBusMarker) map.removeLayer(currentBusMarker);
-    if (destMarker) map.removeLayer(destMarker);
-    if (routePolyline) map.removeLayer(routePolyline);
-
-    const busPos = [bus.lat, bus.lon];
-    const destPos = [bus.destLat, bus.destLon];
-
-    currentBusMarker = L.marker(busPos).addTo(map).bindPopup(`<b>${bus.id} (${bus.reg})</b><br>Speed: ${bus.speed} km/h<br>Next: ${bus.currentStop}`).openPopup();
-    destMarker = L.marker(destPos).addTo(map).bindPopup(`<b>Destination:</b> ${bus.dest}`);
-    routePolyline = L.polyline([busPos, destPos], { color: '#58a6ff', weight: 4, dashArray: '8, 8' }).addTo(map);
-
-    map.fitBounds(L.latLngBounds([busPos, destPos]), { padding: [40, 40] });
   }
 
-  // 4. Render Driver View Function
   function updateDriverView(index) {
     const bus = busFleet[index];
     document.getElementById("driver-speed").innerHTML = `${bus.speed} <span class="unit">km/h</span>`;
@@ -147,11 +113,9 @@ document.addEventListener("DOMContentLoaded", () => {
   commuterSelector.addEventListener("change", (e) => updateCommuterView(e.target.value));
   driverSelector.addEventListener("change", (e) => updateDriverView(e.target.value));
 
-  // Initialize Views
   updateCommuterView(0);
   updateDriverView(0);
 
-  // 5. Tab Navigation Logic with Map Invalidation Fix
   const tabs = document.querySelectorAll(".nav-tab");
   const sections = document.querySelectorAll(".tab-content");
 
@@ -167,14 +131,9 @@ document.addEventListener("DOMContentLoaded", () => {
       tab.classList.add("active");
       tab.setAttribute("aria-selected", "true");
       document.getElementById(`tab-${targetTab}`).classList.add("active");
-
-      if (targetTab === "commuter" && map) {
-        setTimeout(() => map.invalidateSize(), 100);
-      }
     });
   });
 
-  // 6. Emergency SOS Trigger
   if (sosBtn) {
     sosBtn.addEventListener("click", () => {
       const selectedIndex = driverSelector.value;
@@ -183,25 +142,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 7. Real-Time Telemetry Simulation & Live Marker Updating
   const telemetryLog = document.getElementById("telemetry-log");
   setInterval(() => {
-    const selectedCommuterIndex = commuterSelector.value;
     const randomBus = busFleet[Math.floor(Math.random() * busFleet.length)];
-    
-    // Simulate slight movement
-    randomBus.lat += (Math.random() - 0.5) * 0.002;
-    randomBus.lon += (Math.random() - 0.5) * 0.002;
+    randomBus.progress = (randomBus.progress + 1) % 100;
     randomBus.speed = Math.floor(30 + Math.random() * 30);
-
-    // If the currently viewed bus moved, smoothly pan the marker
-    if (busFleet[selectedCommuterIndex].id === randomBus.id && currentBusMarker) {
-      currentBusMarker.setLatLng([randomBus.lat, randomBus.lon]);
-    }
 
     if (telemetryLog) {
       const timestamp = new Date().toISOString().split('T')[1].slice(0, 8);
-      const newLog = `[${timestamp}] PUB/MQTT -> ${randomBus.id} (${randomBus.reg}) | SPD:${randomBus.speed}km/h | LAT:${randomBus.lat.toFixed(4)} LON:${randomBus.lon.toFixed(4)} | PASSENGERS:${randomBus.passengers}/${randomBus.capacity} | QoS:1 ACK\n`;
+      const lat = (13.2172 + (Math.random() * 0.05)).toFixed(4);
+      const lon = (79.1003 + (Math.random() * 0.05)).toFixed(4);
+
+      const newLog = `[${timestamp}] PUB/MQTT -> ${randomBus.id} (${randomBus.reg}) | SPD:${randomBus.speed}km/h | LAT:${lat} LON:${lon} | PASSENGERS:${randomBus.passengers}/${randomBus.capacity} | QoS:1 ACK\n`;
       telemetryLog.innerText += newLog;
       telemetryLog.scrollTop = telemetryLog.scrollHeight;
     }

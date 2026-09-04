@@ -1,290 +1,209 @@
-
-const ROUTE_STOPS = [
-  { name: "Chittoor Bus Stand", lat: 13.2172, lng: 79.1003 },
-  { name: "Puthalapattu",       lat: 13.1580, lng: 79.0850 },
-  { name: "Palamaner",          lat: 13.2011, lng: 78.9950 },
-  { name: "Gudiyatham",         lat: 12.9450, lng: 78.8700 },
-  { name: "Vellore Junction",   lat: 12.9165, lng: 79.1325 }
+// COMPLETE 20 BUS FLEET DATASET WITH GPS COORDINATES
+const busFleet = [
+  { id: "Bus 101", route: "Chittoor → Vellore", type: "APSRTC Express", reg: "AP 03 Z 1012", driver: "K. Ramesh", lic: "AP-03-2018092", shift: "06:00 - 14:00", currentStop: "Gudipala Junction", dest: "Vellore New Bus Stand", progress: 35, eta: 4, speed: 42, speedLimit: 50, passengers: 38, capacity: 55, status: "On Time", lat: 13.1167, lon: 79.1000, destLat: 12.9165, destLon: 79.1325 },
+  { id: "Bus 102", route: "Chittoor → Tirupati", type: "APSRTC Palle Velugu", reg: "AP 03 Z 2041", driver: "S. Venkatesh", lic: "AP-03-2016441", shift: "06:30 - 14:30", currentStop: "Chandragiri Bypass", dest: "Tirupati Central Bus Stand", progress: 60, eta: 11, speed: 48, speedLimit: 50, passengers: 52, capacity: 55, status: "Delayed (+12m)", lat: 13.6288, lon: 79.3175, destLat: 13.6288, destLon: 79.4192 },
+  { id: "Bus 103", route: "Chittoor → Bengaluru", type: "APSRTC Super Luxury", reg: "AP 03 Z 3311", driver: "M. Nageswara Rao", lic: "AP-03-2015002", shift: "07:00 - 15:00", currentStop: "Palamaner Depot", dest: "Majestic Bengaluru", progress: 22, eta: 8, speed: 65, speedLimit: 70, passengers: 28, capacity: 45, status: "On Time", lat: 13.2000, lon: 78.7500, destLat: 12.9776, destLon: 77.5714 },
+  { id: "Bus 104", route: "Chittoor → Chennai", type: "TNSTC Express", reg: "TN 23 N 1892", driver: "R. Selvam", lic: "TN-23-2017882", shift: "05:30 - 13:30", currentStop: "Ranipet Bypass", dest: "CMBT Koyambedu Chennai", progress: 45, eta: 6, speed: 58, speedLimit: 60, passengers: 49, capacity: 50, status: "On Time", lat: 12.9288, lon: 79.3333, destLat: 13.0694, destLon: 80.1948 },
+  { id: "Bus 105", route: "Tirupati → Vellore", type: "APSRTC Ultra Deluxe", reg: "AP 03 Z 5092", driver: "P. Srinivasa", lic: "AP-03-2019120", shift: "08:00 - 16:00", currentStop: "Panapakam Junction", dest: "Vellore Katpadi Junction", progress: 15, eta: 14, speed: 50, speedLimit: 60, passengers: 40, capacity: 48, status: "Delayed (+8m)", lat: 13.4000, lon: 79.2000, destLat: 12.9700, destLon: 79.1378 },
+  { id: "Bus 106", route: "Chittoor → Madanapalle", type: "APSRTC Express", reg: "AP 03 Z 6112", driver: "G. Harikrishna", lic: "AP-03-2020411", shift: "06:00 - 14:00", currentStop: "Kallur X Road", dest: "Madanapalle Bus Stand", progress: 70, eta: 5, speed: 44, speedLimit: 50, passengers: 22, capacity: 55, status: "On Time", lat: 13.5500, lon: 78.8000, destLat: 13.5500, destLon: 78.5000 },
+  { id: "Bus 107", route: "Vellore → Chittoor", type: "TNSTC City Bus", reg: "TN 23 N 2201", driver: "K. Vijay", lic: "TN-23-2019001", shift: "07:00 - 15:00", currentStop: "Katpadi Bus Stop", dest: "Chittoor Old Bus Stand", progress: 80, eta: 3, speed: 38, speedLimit: 40, passengers: 54, capacity: 55, status: "Crowded", lat: 12.9700, lon: 79.1378, destLat: 13.2172, destLon: 79.1003 },
+  { id: "Bus 108", route: "Tirupati → Bengaluru", type: "FreshBus Electric Express", reg: "AP 03 EV 0042", driver: "D. Siva Kumar", lic: "AP-03-2022019", shift: "09:00 - 17:00", currentStop: "Chittoor Bypass", dest: "Electronic City Bengaluru", progress: 40, eta: 7, speed: 62, speedLimit: 70, passengers: 30, capacity: 42, status: "On Time", lat: 13.2172, lon: 79.1003, destLat: 12.8452, destLon: 77.6602 },
+  { id: "Bus 109", route: "Chittoor → Palamaner", type: "Local Feeder", reg: "AP 03 Z 7018", driver: "T. Anand", lic: "AP-03-2018223", shift: "06:15 - 14:15", currentStop: "Bangarupalyam", dest: "Palamaner Bus Stand", progress: 55, eta: 6, speed: 40, speedLimit: 50, passengers: 45, capacity: 50, status: "On Time", lat: 13.2100, lon: 78.9000, destLat: 13.2000, destLon: 78.7500 },
+  { id: "Bus 110", route: "Pileru → Chittoor", type: "APSRTC Palle Velugu", reg: "AP 03 Z 8820", driver: "V. Bhaskar", lic: "AP-03-2017332", shift: "05:45 - 13:45", currentStop: "Damalcheruvu", dest: "Chittoor Main Depot", progress: 65, eta: 9, speed: 45, speedLimit: 50, passengers: 31, capacity: 55, status: "On Time", lat: 13.4500, lon: 79.0500, destLat: 13.2172, destLon: 79.1003 },
+  { id: "Bus 111", route: "Chittoor → Kuppam", type: "APSRTC Express", reg: "AP 03 Z 9102", driver: "N. Mani", lic: "AP-03-2019881", shift: "07:30 - 15:30", currentStop: "V.Kota Main Junction", dest: "Kuppam Bus Stand", progress: 30, eta: 12, speed: 46, speedLimit: 50, passengers: 36, capacity: 55, status: "On Time", lat: 12.9800, lon: 78.5800, destLat: 12.7500, destLon: 78.3500 },
+  { id: "Bus 112", route: "Madanapalle → Tirupati", type: "APSRTC Super Luxury", reg: "AP 03 Z 1289", driver: "C. Reddy", lic: "AP-03-2014510", shift: "08:30 - 16:30", currentStop: "Pileru Bypass", dest: "Tirupati RTC Stand", progress: 50, eta: 10, speed: 55, speedLimit: 60, passengers: 44, capacity: 48, status: "Delayed (+15m)", lat: 13.6200, lon: 79.0200, destLat: 13.6288, destLon: 79.4192 },
+  { id: "Bus 113", route: "Chittoor → Srikalahasti", type: "APSRTC Express", reg: "AP 03 Z 3390", driver: "B. Suresh", lic: "AP-03-2021009", shift: "06:00 - 14:00", currentStop: "Gajulamandyam", dest: "Srikalahasti Temple Stand", progress: 75, eta: 4, speed: 52, speedLimit: 60, passengers: 48, capacity: 55, status: "On Time", lat: 13.6500, lon: 79.5200, destLat: 13.7500, destLon: 79.7000 },
+  { id: "Bus 114", route: "Tirupati → Chennai", type: "APSRTC Garuda AC", reg: "AP 03 Z 4410", driver: "A. Prasad", lic: "AP-03-2016772", shift: "10:00 - 18:00", currentStop: "Tiruttani Junction", dest: "CMBT Chennai", progress: 50, eta: 15, speed: 60, speedLimit: 70, passengers: 25, capacity: 40, status: "On Time", lat: 13.1800, lon: 79.6300, destLat: 13.0694, destLon: 80.1948 },
+  { id: "Bus 115", route: "Chittoor → Puttur", type: "APSRTC Local", reg: "AP 03 Z 5581", driver: "K. Mohan", lic: "AP-03-2018991", shift: "06:45 - 14:45", currentStop: "Nagari Bus Stop", dest: "Puttur Bus Stand", progress: 85, eta: 2, speed: 36, speedLimit: 40, passengers: 50, capacity: 55, status: "Crowded", lat: 13.3300, lon: 79.5800, destLat: 13.4400, destLon: 79.5500 },
+  { id: "Bus 116", route: "Gudiyatham → Chittoor", type: "TNSTC Shuttle", reg: "TN 23 N 9921", driver: "S. Murugan", lic: "TN-23-2020112", shift: "07:15 - 15:15", currentStop: "Paradami Border", dest: "Chittoor RTC Stand", progress: 40, eta: 8, speed: 41, speedLimit: 50, passengers: 29, capacity: 50, status: "On Time", lat: 13.0000, lon: 78.9500, destLat: 13.2172, destLon: 79.1003 },
+  { id: "Bus 117", route: "Chittoor → Kolar", type: "KSRTC Inter-State", reg: "KA 07 F 1022", driver: "H. Gowda", lic: "KA-07-2017331", shift: "08:00 - 16:00", currentStop: "Mulbagal Bypass", dest: "Kolar Bus Stand", progress: 60, eta: 7, speed: 56, speedLimit: 60, passengers: 33, capacity: 50, status: "On Time", lat: 13.1600, lon: 78.3900, destLat: 13.1300, destLon: 78.1300 },
+  { id: "Bus 118", route: "Bengaluru → Chittoor", type: "KSRTC Rajahamsa", reg: "KA 07 F 3310", driver: "M. Kumar", lic: "KA-07-2015902", shift: "09:30 - 17:30", currentStop: "Hoskote Toll Gate", dest: "Chittoor Main Depot", progress: 25, eta: 20, speed: 64, speedLimit: 70, passengers: 39, capacity: 44, status: "On Time", lat: 13.0700, lon: 77.8000, destLat: 13.2172, destLon: 79.1003 },
+  { id: "Bus 119", route: "Tirupati → Kadapa", type: "APSRTC Express", reg: "AP 04 Z 1109", driver: "Y. Ramaiah", lic: "AP-04-2018221", shift: "06:00 - 14:00", currentStop: "Peileru Road", dest: "Kadapa Seven Roads", progress: 35, eta: 18, speed: 54, speedLimit: 60, passengers: 42, capacity: 55, status: "On Time", lat: 13.8000, lon: 78.9000, destLat: 14.4700, destLon: 78.8200 },
+  { id: "Bus 120", route: "Chittoor → Kanipakam", type: "Temple Special Shuttle", reg: "AP 03 Z 7721", driver: "D. Venkateswarlu", lic: "AP-03-2019441", shift: "05:00 - 13:00", currentStop: "Iruvaram Junction", dest: "Kanipakam Temple Stand", progress: 90, eta: 2, speed: 32, speedLimit: 40, passengers: 55, capacity: 55, status: "Full Capacity", lat: 13.2500, lon: 79.0800, destLat: 13.2800, destLon: 79.0300 }
 ];
 
-function buildPath(stops, stepsPerLeg) {
-  const path = [];
-  for (let i = 0; i < stops.length - 1; i++) {
-    const a = stops[i], b = stops[i + 1];
-    for (let s = 0; s < stepsPerLeg; s++) {
-      const t = s / stepsPerLeg;
-      path.push({
-        lat: a.lat + (b.lat - a.lat) * t,
-        lng: a.lng + (b.lng - a.lng) * t,
-        legIndex: i
-      });
-    }
+let map;
+let currentBusMarker;
+let destMarker;
+let routePolyline;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const commuterSelector = document.getElementById("commuter-bus-selector");
+  const driverSelector = document.getElementById("driver-bus-selector");
+  const fleetTableBody = document.getElementById("fleet-table-body");
+  const driverRosterBody = document.getElementById("driver-roster-body");
+  const sosBtn = document.getElementById("sos-trigger-btn");
+
+  // 1. Initialize Leaflet Map
+  function initMap() {
+    map = L.map('map').setView([13.2172, 79.1003], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
   }
-  path.push({ ...stops[stops.length - 1], legIndex: stops.length - 2 });
-  return path;
-}
 
-const STEPS_PER_LEG = 40;
-const PATH = buildPath(ROUTE_STOPS, STEPS_PER_LEG);
+  initMap();
 
-const map = L.map("map", { zoomControl: true, attributionControl: true }).setView(
-  [ROUTE_STOPS[2].lat, ROUTE_STOPS[2].lng], 10
-);
+  // 2. Populate Dropdowns & Depot Tables
+  busFleet.forEach((bus, index) => {
+    const opt1 = document.createElement("option");
+    opt1.value = index;
+    opt1.innerText = `${bus.id} - ${bus.route} (${bus.type})`;
+    commuterSelector.appendChild(opt1);
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 18,
-  attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
+    const opt2 = document.createElement("option");
+    opt2.value = index;
+    opt2.innerText = `${bus.id} - ${bus.route} [Driver: ${bus.driver}]`;
+    driverSelector.appendChild(opt2);
 
-const routeLine = L.polyline(
-  ROUTE_STOPS.map(s => [s.lat, s.lng]),
-  { color: "#3ED6B5", weight: 3, opacity: 0.55 }
-).addTo(map);
+    const occupancyPct = Math.round((bus.passengers / bus.capacity) * 100);
+    let badgeClass = "badge-success";
+    if (occupancyPct > 85) badgeClass = "badge-danger";
+    else if (occupancyPct > 60) badgeClass = "badge-warning";
 
-ROUTE_STOPS.forEach(stop => {
-  L.circleMarker([stop.lat, stop.lng], {
-    radius: 5, color: "#8B98A5", fillColor: "#121820", fillOpacity: 1, weight: 2
-  }).addTo(map).bindTooltip(stop.name, { direction: "top" });
-});
-
-const busIcon = L.divIcon({
-  className: "bus-marker",
-  html: '<div style="width:16px;height:16px;border-radius:50%;background:#3ED6B5;box-shadow:0 0 0 5px rgba(62,214,181,0.25);"></div>',
-  iconSize: [16, 16],
-  iconAnchor: [8, 8]
-});
-
-const busMarker = L.marker([PATH[0].lat, PATH[0].lng], { icon: busIcon }).addTo(map);
-map.fitBounds(routeLine.getBounds(), { padding: [30, 30] });
-
-let pathIndex = 0;
-
-const els = {
-  progressLabel: document.getElementById("progressLabel"),
-  etaMinutes: document.getElementById("etaMinutes"),
-  nextStopName: document.getElementById("nextStopName"),
-  directionLabel: document.getElementById("directionLabel"),
-  statusPill: document.getElementById("statusPill"),
-  crowdPill: document.getElementById("crowdPill"),
-  crowdFill: document.getElementById("crowdFill"),
-  driverSpeed: document.getElementById("driverSpeed"),
-  adherenceReadout: document.getElementById("adherenceReadout"),
-  adherenceDetail: document.getElementById("adherenceDetail"),
-  driverNextStop: document.getElementById("driverNextStop"),
-  driverDistance: document.getElementById("driverDistance"),
-  telemetryFeed: document.getElementById("telemetryFeed"),
-  fleetTimestamp: document.getElementById("fleetTimestamp")
-};
-
-function currentOccupancyPercent() {
-  const t = Date.now() / 20000;
-  const wave = Math.sin(t) * 0.5 + 0.5;
-  return Math.round(15 + wave * 75);
-}
-
-function occupancyLabel(pct) {
-  if (pct < 40) return { label: "Low", cls: "" };
-  if (pct < 75) return { label: "Medium", cls: "pill-amber" };
-  return { label: "Full", cls: "pill-red" };
-}
-
-function updateCommuterView() {
-  const point = PATH[pathIndex];
-  busMarker.setLatLng([point.lat, point.lng]);
-
-  const progressPct = Math.round((pathIndex / (PATH.length - 1)) * 100);
-  els.progressLabel.textContent = `${progressPct}% along route`;
-
-  const nextStop = ROUTE_STOPS[Math.min(point.legIndex + 1, ROUTE_STOPS.length - 1)];
-  els.nextStopName.textContent = nextStop.name;
-  els.directionLabel.textContent = "Vellore-bound";
-
-  const stepsRemainingInLeg = STEPS_PER_LEG - (pathIndex % STEPS_PER_LEG);
-  const etaMin = Math.max(1, Math.round(stepsRemainingInLeg / 8));
-  els.etaMinutes.textContent = etaMin;
-
-  const occ = currentOccupancyPercent();
-  const { label, cls } = occupancyLabel(occ);
-  els.crowdPill.textContent = `${label} · ${occ}%`;
-  els.crowdPill.className = "pill " + cls;
-  els.crowdFill.style.width = occ + "%";
-  els.crowdFill.style.background =
-    occ < 40 ? "var(--teal)" : occ < 75 ? "var(--amber)" : "var(--red)";
-}
-
-const FLEET = [
-  { bus: "101", route: "Chittoor–Vellore", status: "ontime", stop: "Puthalapattu", occ: 42, driver: "R. Suresh" },
-  { bus: "102", route: "Chittoor–Palamaner", status: "delayed", delay: 6, stop: "Chittoor Bus Stand", occ: 78, driver: "K. Anitha" },
-  { bus: "204", route: "Gudiyatham–Vellore", status: "ontime", stop: "Gudiyatham", occ: 25, driver: "M. Vijay" },
-  { bus: "202", route: "Crosstown Loop", status: "alert", stop: "4th Street (detour)", occ: 61, driver: "S. Farooq" },
-  { bus: "115", route: "Vellore–Katpadi", status: "ontime", stop: "Vellore Junction", occ: 33, driver: "P. Lakshmi" }
-];
-
-function statusTag(bus) {
-  if (bus.status === "ontime") return `<span class="status-tag status-ontime">On time</span>`;
-  if (bus.status === "delayed") return `<span class="status-tag status-delayed">Delayed ${bus.delay} min</span>`;
-  return `<span class="status-tag status-alert">Attention needed</span>`;
-}
-
-function occTag(pct) {
-  const { label } = occupancyLabel(pct);
-  return `${label} · ${pct}%`;
-}
-
-function renderFleetTable() {
-  const tbody = document.querySelector("#fleetTable tbody");
-  tbody.innerHTML = FLEET.map(bus => `
-    <tr>
-      <td>${bus.bus}</td>
-      <td>${bus.route}</td>
-      <td>${statusTag(bus)}</td>
-      <td>${bus.stop}</td>
-      <td>${occTag(bus.occ)}</td>
+    const tr1 = document.createElement("tr");
+    tr1.innerHTML = `
+      <td><strong>${bus.id}</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">${bus.reg}</span></td>
+      <td>${bus.route}<br><span style="font-size:0.75rem; color:var(--text-muted);">${bus.type}</span></td>
+      <td><span class="badge ${bus.status.includes('Delayed') ? 'badge-danger' : 'badge-success'}">${bus.status}</span></td>
+      <td>${bus.currentStop}</td>
+      <td><span class="badge ${badgeClass}">${occupancyPct}% (${bus.passengers}/${bus.capacity})</span></td>
+      <td>${bus.speed} km/h</td>
       <td>${bus.driver}</td>
-    </tr>
-  `).join("");
-  els.fleetTimestamp.textContent = "Last synced " + new Date().toLocaleTimeString();
-}
+    `;
+    fleetTableBody.appendChild(tr1);
 
-const DELAYS = [
-  { bus: "102", text: "Running 6 min behind schedule near Chittoor Bus Stand.", severe: false },
-  { bus: "202", text: "Detour on 4th Street pushing 3 stops back by ~10 min.", severe: true }
-];
-
-function renderDelayList() {
-  const list = document.getElementById("delayList");
-  list.innerHTML = DELAYS.map(d => `
-    <li class="${d.severe ? "severe" : ""}">
-      ${d.text}
-      <span class="notif-bus">Bus ${d.bus}</span>
-    </li>
-  `).join("");
-}
-
-const ASSIGNMENTS = [
-  { driver: "R. Suresh", bus: "101", route: "Chittoor–Vellore", shift: "06:00 – 14:00", checked: "Yes" },
-  { driver: "K. Anitha", bus: "102", route: "Chittoor–Palamaner", shift: "06:00 – 14:00", checked: "Yes" },
-  { driver: "M. Vijay",  bus: "204", route: "Gudiyatham–Vellore", shift: "14:00 – 22:00", checked: "Yes" },
-  { driver: "S. Farooq", bus: "202", route: "Crosstown Loop", shift: "06:00 – 14:00", checked: "Pending" },
-  { driver: "P. Lakshmi", bus: "115", route: "Vellore–Katpadi", shift: "14:00 – 22:00", checked: "Yes" }
-];
-
-function renderAssignmentTable() {
-  const tbody = document.querySelector("#assignTable tbody");
-  tbody.innerHTML = ASSIGNMENTS.map(a => `
-    <tr>
-      <td>${a.driver}</td>
-      <td>${a.bus}</td>
-      <td>${a.route}</td>
-      <td>${a.shift}</td>
-      <td>${a.checked}</td>
-    </tr>
-  `).join("");
-}
-
-function updateDriverView() {
-  const speed = Math.round(28 + Math.sin(Date.now() / 4000) * 10 + Math.random() * 3);
-  els.driverSpeed.textContent = Math.max(0, speed);
-
-  const point = PATH[pathIndex];
-  const nextStop = ROUTE_STOPS[Math.min(point.legIndex + 1, ROUTE_STOPS.length - 1)];
-  els.driverNextStop.textContent = nextStop.name;
-
-  const stepsRemainingInLeg = STEPS_PER_LEG - (pathIndex % STEPS_PER_LEG);
-  const distanceKm = (stepsRemainingInLeg * 0.15).toFixed(1);
-  els.driverDistance.textContent = `${distanceKm} km`;
-
-  const adherenceMin = Math.round(Math.sin(Date.now() / 15000) * 4);
-  if (Math.abs(adherenceMin) <= 1) {
-    els.adherenceReadout.textContent = "On time";
-    els.adherenceReadout.style.color = "var(--teal)";
-    els.adherenceDetail.textContent = "Matching timetable within tolerance.";
-  } else if (adherenceMin > 1) {
-    els.adherenceReadout.textContent = `${adherenceMin} min ahead`;
-    els.adherenceReadout.style.color = "var(--amber)";
-    els.adherenceDetail.textContent = "Consider holding briefly at the next stop.";
-  } else {
-    els.adherenceReadout.textContent = `${Math.abs(adherenceMin)} min behind`;
-    els.adherenceReadout.style.color = "var(--red)";
-    els.adherenceDetail.textContent = "Depot has been notified automatically.";
-  }
-}
-
-const sosButton = document.getElementById("sosButton");
-const sosStatus = document.getElementById("sosStatus");
-let sosTimer = null;
-
-sosButton.addEventListener("click", () => {
-  sosButton.classList.add("is-sent");
-  sosButton.textContent = "SENT";
-  sosStatus.textContent = "Alert sent to depot control with your live location.";
-  clearTimeout(sosTimer);
-  sosTimer = setTimeout(() => {
-    sosButton.classList.remove("is-sent");
-    sosButton.textContent = "SOS";
-    sosStatus.textContent = "Press and hold in a real emergency. Alerts depot control instantly.";
-  }, 4000);
-});
-
-function pushTelemetryLine() {
-  const point = PATH[pathIndex];
-  const speed = Math.max(0, Math.round(28 + Math.sin(Date.now() / 4000) * 10));
-  const rpm = 900 + speed * 22;
-  const fuel = 61 - Math.round((pathIndex / PATH.length) * 8);
-  const payload = {
-    vehicle_id: "WL-101",
-    lat: point.lat.toFixed(5),
-    lng: point.lng.toFixed(5),
-    speed_kmph: speed,
-    engine_rpm_pid0C: rpm,
-    fuel_level_pct_pid2F: fuel,
-    ts: new Date().toISOString()
-  };
-
-  const feed = els.telemetryFeed;
-  const line = document.createElement("div");
-  line.textContent = JSON.stringify(payload);
-  feed.appendChild(line);
-
-  while (feed.childNodes.length > 30) {
-    feed.removeChild(feed.firstChild);
-  }
-  feed.scrollTop = feed.scrollHeight;
-}
-
-const roleButtons = document.querySelectorAll(".role-btn");
-const views = document.querySelectorAll(".view");
-
-roleButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    roleButtons.forEach(b => {
-      b.classList.remove("is-active");
-      b.setAttribute("aria-selected", "false");
-    });
-    btn.classList.add("is-active");
-    btn.setAttribute("aria-selected", "true");
-
-    const targetId = "view-" + btn.dataset.view;
-    views.forEach(v => v.classList.toggle("is-active", v.id === targetId));
-
-    if (targetId === "view-commuter") {
-      setTimeout(() => map.invalidateSize(), 50);
-    }
+    const tr2 = document.createElement("tr");
+    tr2.innerHTML = `
+      <td><strong>${bus.driver}</strong></td>
+      <td><span style="font-family:monospace; color:var(--accent-blue);">${bus.lic}</span></td>
+      <td>${bus.id} (${bus.reg})</td>
+      <td>${bus.route}</td>
+      <td>${bus.shift}</td>
+      <td><span style="color:#3fb950; font-weight:bold;">✓ Verified</span></td>
+    `;
+    driverRosterBody.appendChild(tr2);
   });
+
+  // 3. Render Commuter View & Update Map Markers
+  function updateCommuterView(index) {
+    const bus = busFleet[index];
+    const occPct = Math.round((bus.passengers / bus.capacity) * 100);
+
+    document.getElementById("active-bus-title").innerText = `${bus.id} - ${bus.route}`;
+    document.getElementById("active-bus-desc").innerText = `Operated by ${bus.type} • Vehicle ${bus.reg}`;
+    document.getElementById("route-progress").style.width = bus.progress + "%";
+    document.getElementById("progress-text").innerText = bus.progress;
+
+    document.getElementById("commuter-eta").innerText = bus.eta;
+    document.getElementById("commuter-next-stop").innerText = bus.currentStop;
+    document.getElementById("commuter-direction").innerText = bus.dest;
+    document.getElementById("commuter-occupancy-count").innerText = `${bus.passengers} / ${bus.capacity} passengers`;
+
+    const crowdBar = document.getElementById("commuter-crowd-bar");
+    const crowdBadge = document.getElementById("commuter-crowd-badge");
+    crowdBar.style.width = occPct + "%";
+
+    if (occPct > 85) {
+      crowdBadge.innerText = `High (${occPct}%)`;
+      crowdBadge.className = "badge badge-danger";
+      crowdBar.style.background = "var(--accent-red)";
+    } else if (occPct > 60) {
+      crowdBadge.innerText = `Moderate (${occPct}%)`;
+      crowdBadge.className = "badge badge-warning";
+      crowdBar.style.background = "var(--accent-yellow)";
+    } else {
+      crowdBadge.innerText = `Low (${occPct}%)`;
+      crowdBadge.className = "badge badge-success";
+      crowdBar.style.background = "var(--accent-green)";
+    }
+
+    // Update Leaflet Map Positions
+    if (currentBusMarker) map.removeLayer(currentBusMarker);
+    if (destMarker) map.removeLayer(destMarker);
+    if (routePolyline) map.removeLayer(routePolyline);
+
+    const busPos = [bus.lat, bus.lon];
+    const destPos = [bus.destLat, bus.destLon];
+
+    currentBusMarker = L.marker(busPos).addTo(map).bindPopup(`<b>${bus.id} (${bus.reg})</b><br>Speed: ${bus.speed} km/h<br>Next: ${bus.currentStop}`).openPopup();
+    destMarker = L.marker(destPos).addTo(map).bindPopup(`<b>Destination:</b> ${bus.dest}`);
+    routePolyline = L.polyline([busPos, destPos], { color: '#58a6ff', weight: 4, dashArray: '8, 8' }).addTo(map);
+
+    map.fitBounds(L.latLngBounds([busPos, destPos]), { padding: [40, 40] });
+  }
+
+  // 4. Render Driver View Function
+  function updateDriverView(index) {
+    const bus = busFleet[index];
+    document.getElementById("driver-speed").innerHTML = `${bus.speed} <span class="unit">km/h</span>`;
+    document.getElementById("driver-speed-limit").innerText = `${bus.speedLimit} km/h`;
+    document.getElementById("driver-assigned-name").innerText = bus.driver;
+    document.getElementById("driver-route").innerText = bus.route;
+    document.getElementById("driver-next-stop").innerText = bus.currentStop;
+  }
+
+  commuterSelector.addEventListener("change", (e) => updateCommuterView(e.target.value));
+  driverSelector.addEventListener("change", (e) => updateDriverView(e.target.value));
+
+  // Initialize Views
+  updateCommuterView(0);
+  updateDriverView(0);
+
+  // 5. Tab Navigation Logic with Map Invalidation Fix
+  const tabs = document.querySelectorAll(".nav-tab");
+  const sections = document.querySelectorAll(".tab-content");
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      const targetTab = tab.getAttribute("data-tab");
+      tabs.forEach(t => {
+        t.classList.remove("active");
+        t.setAttribute("aria-selected", "false");
+      });
+      sections.forEach(sec => sec.classList.remove("active"));
+
+      tab.classList.add("active");
+      tab.setAttribute("aria-selected", "true");
+      document.getElementById(`tab-${targetTab}`).classList.add("active");
+
+      if (targetTab === "commuter" && map) {
+        setTimeout(() => map.invalidateSize(), 100);
+      }
+    });
+  });
+
+  // 6. Emergency SOS Trigger
+  if (sosBtn) {
+    sosBtn.addEventListener("click", () => {
+      const selectedIndex = driverSelector.value;
+      const bus = busFleet[selectedIndex];
+      alert(`🚨 SOS ALERT SENT!\n\nBus: ${bus.id} (${bus.reg})\nDriver: ${bus.driver}\nRoute: ${bus.route}\n\nHigh-priority GPS coordinates pushed to Depot Control & Dispatch.`);
+    });
+  }
+
+  // 7. Real-Time Telemetry Simulation & Live Marker Updating
+  const telemetryLog = document.getElementById("telemetry-log");
+  setInterval(() => {
+    const selectedCommuterIndex = commuterSelector.value;
+    const randomBus = busFleet[Math.floor(Math.random() * busFleet.length)];
+    
+    // Simulate slight movement
+    randomBus.lat += (Math.random() - 0.5) * 0.002;
+    randomBus.lon += (Math.random() - 0.5) * 0.002;
+    randomBus.speed = Math.floor(30 + Math.random() * 30);
+
+    // If the currently viewed bus moved, smoothly pan the marker
+    if (busFleet[selectedCommuterIndex].id === randomBus.id && currentBusMarker) {
+      currentBusMarker.setLatLng([randomBus.lat, randomBus.lon]);
+    }
+
+    if (telemetryLog) {
+      const timestamp = new Date().toISOString().split('T')[1].slice(0, 8);
+      const newLog = `[${timestamp}] PUB/MQTT -> ${randomBus.id} (${randomBus.reg}) | SPD:${randomBus.speed}km/h | LAT:${randomBus.lat.toFixed(4)} LON:${randomBus.lon.toFixed(4)} | PASSENGERS:${randomBus.passengers}/${randomBus.capacity} | QoS:1 ACK\n`;
+      telemetryLog.innerText += newLog;
+      telemetryLog.scrollTop = telemetryLog.scrollHeight;
+    }
+  }, 2000);
 });
-
-renderFleetTable();
-renderDelayList();
-renderAssignmentTable();
-updateCommuterView();
-updateDriverView();
-for (let i = 0; i < 4; i++) pushTelemetryLine();
-
-setInterval(() => {
-  pathIndex = (pathIndex + 1) % PATH.length;
-  updateCommuterView();
-  updateDriverView();
-}, 700);
-
-setInterval(pushTelemetryLine, 2200);
-setInterval(renderFleetTable, 8000);
